@@ -19,12 +19,12 @@ public class MainController {
 
     @GetMapping(value = "/admin/clients")
     public String client(Model model){
-        return "/client/clients";
+        return "client/clients";
     }
 
     @GetMapping(value = "/admin/reservations")
     public String reservation(Model model){
-        return "/reservation/reservations";
+        return "reservation/reservations";
     }
 
 

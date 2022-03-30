@@ -1,6 +1,6 @@
 package com.hotel.repository;
 
-import com.hotel.constant.RoomStatus;
+import com.hotel.constant.RoomType;
 import com.hotel.entity.Room;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,8 +10,6 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
@@ -28,7 +26,7 @@ class RoomRepositoryTest {
         room.setRoomNm("테스트 객실");
         room.setPricePerNight(40000);
         room.setRoomDetail("객실 상세 설명");
-        room.setRoomStatus(RoomStatus.FREE);
+        room.setRoomType(RoomType.SINGLE);
         room.setRegTime(LocalDateTime.now());
         room.setUpdateTime(LocalDateTime.now());
         Room savedRoom = roomRepository.save(room);
@@ -41,7 +39,7 @@ class RoomRepositoryTest {
             room.setRoomNm("테스트 객실" +i);
             room.setPricePerNight(40000 +i);
             room.setRoomDetail("객실 상세 설명" +i);
-            room.setRoomStatus(RoomStatus.FREE);
+            room.setRoomType(RoomType.SINGLE);
             room.setRegTime(LocalDateTime.now());
             room.setUpdateTime(LocalDateTime.now());
             Room savedRoom = roomRepository.save(room);
