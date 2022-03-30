@@ -38,12 +38,34 @@
 
 <body>
 
+      <script th:inline="javascript">
+
+          $(document).ready(function(){
+              $("#searchBtn").on("click",function(e) {
+                  e.preventDefault();
+                  page(0);
+              });
+          });
+
+          function page(page){
+              var searchDateType = $("#searchDateType").val();
+              var searchRoomType = $("#searchRoomType").val();
+              var searchQuery = $("#searchQuery").val();
+
+              location.href="/admin/rooms/" + page + "?searchDateType=" + searchDateType
+              + "&searchRoomType=" + searchRoomType
+              + "&searchQuery=" + searchQuery;
+          }
+
+      </script>
+
   <header th:replace="fragment/common :: header"></header><!-- End Header -->
 
   <!-- ======= Sidebar ======= -->
   <aside th:replace="fragment/common:: sidebar">
 
   </aside>
+
 
   <main id="main" class="main">
 
@@ -55,85 +77,51 @@
             <div class="row">
               <div class="col-sm-8"><h2>Room <b>Details</b></h2></div>
               <div class="col-sm-4">
-                <div class="search-box">
-                  <i class="material-icons">&#xE8B6;</i>
-                  <input type="text" class="form-control" placeholder="Search&hellip;">
-                </div>
               </div>
             </div>
           </div>
-          <table class="table table-striped table-hover table-bordered">
+
+          <form th:action="@{'/admin/rooms/' + ${rooms.number}}" role="form" method="get" th:object="${rooms}">
+
+            <div class="form-inline justify-content-end mb-3" th:object="${roomSearchDto}">
+              <select th:field="*{searchDateType}" class="form-control" style="width:auto;">
+                <option value="all">Period</option>
+                <option value="1d">1 day</option>
+                <option value="1w">1 week</option>
+                <option value="1m">1 month</option>
+                <option value="6m">6 month</option>
+              </select>
+              <select th:field="*{searchRoomType}" class="form-control" style="width:auto;">
+                <option value="">RoomType</option>
+                <option value="SINGLE">Single</option>
+                <option value="DOUBLE">Double</option>
+                <option value="QUEEN">Queen</option>
+                <option value="SUITE">Suite</option>
+              </select>
+              <input th:field="*{searchQuery}" type="text" class="form-control" placeholder="Search&hellip;">
+              <button id="searchBtn" type="submit" class="btn btn-primary">검색</button>
+            </div>
+
+            <table class="table table-striped table-hover table-bordered">
             <thead>
             <tr>
-              <th>Reservation.No</th>
-              <th>Client_Id</th>
-              <th>Room</th>
-              <th>Check_In</th>
-              <th>Check_Out</th>
-              <th>Status</th>
-              <th>Actions</th>
+              <th>Room.No</th>
+              <th>Name</th>
+              <th>Type</th>
+              <th>MaxGuest</th>
+              <th>PricePerNight</th>
             </tr>
             </thead>
+
             <tbody>
-            <tr>
-              <td>1</td>
-              <td>Thomas Hardy</td>
-              <td>Delux 4</td>
-              <td>2022.3.15</td>
-              <td>2022.3.49</td>
-              <td>Reserved</td>
+            <tr th:each="room, status: ${rooms.getContent()}">
+              <td th:text="${room.id}"></td>
               <td>
-                <a href="#" class="view" title="View" data-toggle="tooltip"><i class="material-icons">&#xE417;</i></a>
-                <a href="#" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-                <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
+                <a th:href="'/admin/room/'+${room.id}" th:text="${room.roomNm}"></a>
               </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Thomas Hardy</td>
-              <td>Delux 4</td>
-              <td>2022.3.15</td>
-              <td>2022.3.49</td>
-              <td>Reserved</td>
-              <td>
-                <a href="#" class="view" title="View" data-toggle="tooltip"><i class="material-icons">&#xE417;</i></a>
-                <a href="#" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-                <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
-              </td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>Thomas Hardy</td>
-              <td>Delux 4</td>
-              <td>2022.3.15</td>
-              <td>2022.3.49</td>
-              <td>Reserved</td>
-              <td>
-                <a href="#" class="view" title="View" data-toggle="tooltip"><i class="material-icons">&#xE417;</i></a>
-                <a href="#" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-                <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
-              </td>
-            </tr>
-            <tr>
-              <td>4</td>
-              <td>Thomas Hardy</td>
-              <td>Delux 4</td>
-              <td>2022.3.15</td>
-              <td>2022.3.49</td>
-              <td>Reserved</td>
-              <td>
-                <a href="#" class="view" title="View" data-toggle="tooltip"><i class="material-icons">&#xE417;</i></a>
-                <a href="#" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-                <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
-              </td>
-            </tr>
-            <tr>
-              <td>5</td>
-              <td>Thomas Hardy</td>
-              <td>Delux 4</td>
-              <td>2022.3.15</td>
-              <td>2022.3.49</td>
-              <td>Reserved</td>
+              <td th:text="${room.roomType}"></td>
+              <td th:text="${room.maxPeople}"></td>
+              <td th:text="${room.pricePerNight}"></td>
               <td>
                 <a href="#" class="view" title="View" data-toggle="tooltip"><i class="material-icons">&#xE417;</i></a>
                 <a href="#" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
@@ -142,20 +130,23 @@
             </tr>
             </tbody>
           </table>
-          <div class="clearfix">
-            <div class="add-new justify-content-end">
-              <button type="button" class="btn btn-info add-new" onClick="location.href='/admin/room/new'"><i class="fa fa-plus"></i> Add Room</button>
+          </form>
+
+            <div class="clearfix">
+              <div class="add-new justify-content-end">
+                <button type="button" class="btn btn-info add-new" onClick="location.href='/admin/room/new'"><i class="fa fa-plus"></i> Add Room</button>
+              </div>
+              <ul class="pagination justify-content-center" >
+                <li class="page-item disabled"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
+                <li class="page-item"><a href="#" class="page-link">1</a></li>
+                <li class="page-item"><a href="#" class="page-link">2</a></li>
+                <li class="page-item active"><a href="#" class="page-link">3</a></li>
+                <li class="page-item"><a href="#" class="page-link">4</a></li>
+                <li class="page-item"><a href="#" class="page-link">5</a></li>
+                <li class="page-item"><a href="#" class="page-link"><i class="fa fa-angle-double-right"></i></a></li>
+              </ul>
             </div>
-            <ul class="pagination justify-content-center" >
-              <li class="page-item disabled"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
-              <li class="page-item"><a href="#" class="page-link">1</a></li>
-              <li class="page-item"><a href="#" class="page-link">2</a></li>
-              <li class="page-item active"><a href="#" class="page-link">3</a></li>
-              <li class="page-item"><a href="#" class="page-link">4</a></li>
-              <li class="page-item"><a href="#" class="page-link">5</a></li>
-              <li class="page-item"><a href="#" class="page-link"><i class="fa fa-angle-double-right"></i></a></li>
-            </ul>
-          </div>
+
         </div>
       </div>
     </div>

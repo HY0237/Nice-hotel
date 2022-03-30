@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class Room {
+public class Room extends BaseEntity {
 
     @Id
     @Column(name="room_id")
@@ -37,9 +37,6 @@ public class Room {
     @Enumerated(EnumType.STRING)
     private RoomType roomType;
 
-    private LocalDateTime regTime;
-
-    private LocalDateTime updateTime;
 
     public void updateRoom(RoomFormDto roomFormDto){
         this.roomNm = roomFormDto.getRoomNm();

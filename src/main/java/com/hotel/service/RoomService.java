@@ -2,11 +2,14 @@ package com.hotel.service;
 
 import com.hotel.dto.RoomFormDto;
 import com.hotel.dto.RoomImgDto;
+import com.hotel.dto.RoomSearchDto;
 import com.hotel.entity.Room;
 import com.hotel.entity.RoomImg;
 import com.hotel.repository.RoomImgRepository;
 import com.hotel.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -74,4 +77,10 @@ public class RoomService {
 
         return room.getId();
     }
+
+    @Transactional(readOnly=true)
+    public Page<Room> getAdminRoomPage(RoomSearchDto roomSearchDto, Pageable pageable){
+        return roomRepository.getAdminItemPage(roomSearchDto, pageable);
+    }
+
 }
