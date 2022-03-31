@@ -1,5 +1,6 @@
 package com.hotel.service;
 
+import com.hotel.dto.ReservationMainDto;
 import com.hotel.dto.RoomFormDto;
 import com.hotel.dto.RoomImgDto;
 import com.hotel.dto.RoomSearchDto;
@@ -80,7 +81,12 @@ public class RoomService {
 
     @Transactional(readOnly=true)
     public Page<Room> getAdminRoomPage(RoomSearchDto roomSearchDto, Pageable pageable){
-        return roomRepository.getAdminItemPage(roomSearchDto, pageable);
+        return roomRepository.getAdminRoomPage(roomSearchDto, pageable);
+    }
+
+    @Transactional(readOnly=true)
+    public Page<ReservationMainDto> getReserveRoomPage(RoomSearchDto roomSearchDto, Pageable pageable){
+        return roomRepository.getReserveRoomPage(roomSearchDto, pageable);
     }
 
 }

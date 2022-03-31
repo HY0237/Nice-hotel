@@ -22,10 +22,6 @@ public class MainController {
         return "client/clients";
     }
 
-    @GetMapping(value = "/admin/reservations")
-    public String reservation(Model model){
-        return "reservation/reservations";
-    }
 
 
 }

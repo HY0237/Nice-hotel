@@ -29,12 +29,6 @@ public class RoomController {
 
     private final RoomService roomService;
 
-//    @GetMapping(value = "/admin/rooms")
-//    public String room(Model model){
-//
-//        return "room/rooms";
-//    }
-
     @GetMapping(value = "/admin/room/new")
     public String roomForm(Model model){
         model.addAttribute("roomFormDto", new RoomFormDto());
@@ -61,7 +55,7 @@ public class RoomController {
             return "room/roomForm";
         }
 
-        return "redirect:/";
+        return "redirect:/admin/rooms";
     }
 
     @GetMapping(value = "/admin/room/{roomId}")
@@ -101,12 +95,12 @@ public class RoomController {
             return "room/roomForm";
         }
 
-        return "redirect:/";
+        return "redirect:/admin/rooms";
     }
 
 
     @GetMapping(value = {"/admin/rooms", "/admin/rooms/{page}"})
-    public String itemManage(RoomSearchDto roomSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
+    public String roomManage(RoomSearchDto roomSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
         Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 3);
         Page<Room> rooms = roomService.getAdminRoomPage(roomSearchDto, pageable);
         model.addAttribute("rooms", rooms);
@@ -114,4 +108,6 @@ public class RoomController {
         model.addAttribute("maxPage", 5);
         return "room/rooms";
     }
+
+
 }

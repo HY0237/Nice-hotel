@@ -1,8 +1,11 @@
 package com.hotel.repository;
 
 import com.hotel.constant.RoomType;
+import com.hotel.dto.QReservationMainDto;
+import com.hotel.dto.ReservationMainDto;
 import com.hotel.dto.RoomSearchDto;
 import com.hotel.entity.QRoom;
+import com.hotel.entity.QRoomImg;
 import com.hotel.entity.Room;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -52,11 +55,11 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom{
 
     private BooleanExpression searchRoomByName(String searchQuery){
 
-        return QRoom.room.roomNm.like("%" + searchQuery + "%");
+        return StringUtils.isEmpty(searchQuery) ? null : QRoom.room.roomNm.like("%" + searchQuery + "%");
     }
 
     @Override
-    public Page<Room> getAdminItemPage(RoomSearchDto roomSearchDto, Pageable pageable) {
+    public Page<Room> getAdminRoomPage(RoomSearchDto roomSearchDto, Pageable pageable) {
 
         QueryResults<Room> results = queryFactory
                 .selectFrom(QRoom.room)
@@ -72,5 +75,37 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom{
         long total = results.getTotal();
 
         return new PageImpl<>(content, pageable, total);
+    }
+
+
+    @Override
+    public Page<ReservationMainDto> getReserveRoomPage(RoomSearchDto roomSearchDto, Pageable pageable) {
+        QRoom room = QRoom.room;
+        QRoomImg roomImg = QRoomImg.roomImg;
+
+        QueryResults<ReservationMainDto> results = queryFactory
+                .select(
+                        new QReservationMainDto(
+                                room.id,
+                                room.roomNm,
+                                room.roomType,
+                                room.pricePerNight,
+                                room.maxPeople,
+                                roomImg.imgUrl)
+                )
+                .from(roomImg)
+                .join(roomImg.room(), room)
+                .where(roomImg.repimgYn.eq("Y"))
+                .where(searchRoomByName(roomSearchDto.getSearchQuery()))
+                .orderBy(room.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+
+        List<ReservationMainDto> content = results.getResults();
+        long total = results.getTotal();
+
+        return new PageImpl<>(content, pageable, total);
+
     }
 }

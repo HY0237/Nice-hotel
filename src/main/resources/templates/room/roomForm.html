@@ -31,7 +31,9 @@
   <!-- Template Main CSS File -->
   <link href="/assets/css/style.css" rel="stylesheet">
 
-
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 
 
@@ -102,13 +104,8 @@
   <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Add New Room</h1>
+      <h1>Room Form</h1>
       <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="/">Home</a></li>
-          <li class="breadcrumb-item"><a href="/admin/rooms">Room</a></li>
-
-        </ol>
       </nav>
     </div><!-- End Page Title -->
 
@@ -116,7 +113,7 @@
 
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Room Form</h5>
+              <h5 class="card-title">Room Form Details</h5>
 
               <!-- General Form Elements -->
               <form role="form" method="post" enctype="multipart/form-data" th:object="${roomFormDto}">
@@ -170,7 +167,7 @@
 
                 <div th:if = "${#lists.isEmpty(roomFormDto.roomImgDtoList)}">
                   <div class="row mb-3" th:each="num: ${#numbers.sequence(1,5)}">
-                    <label th:for="inputNumber" class="col-sm-2 col-form-label">Room Image</label>
+                    <label class="col-sm-2 col-form-label" th:text="${num}==1 ? 'Room Image' : '   ' "></label>
                     <div class="col-sm-10">
                       <input class="form-control" type="file" name="roomImgFile">
                     </div>
@@ -180,7 +177,7 @@
 
                 <div th:if = "${not #lists.isEmpty(roomFormDto.roomImgDtoList)}">
                   <div class="row mb-3" th:each="roomImgDto, status: ${roomFormDto.roomImgDtoList}">
-                    <label th:for="inputNumber" class="col-sm-2 col-form-label">Room Image</label>
+                    <label class="col-sm-2 col-form-label" th:text="${status.index} == 0 ? 'Room Image' : '   ' "></label>
                     <div class="col-sm-10">
                       <input type="file" class="form-control" name="roomImgFile">
                       <input type="hidden" name="roomImgIds" th:value="${roomImgDto.id}">
