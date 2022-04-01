@@ -33,7 +33,7 @@ public class RoomImgService {
         if(!StringUtils.isEmpty(oriImgName)){
             imgName = fileService.uploadFile(roomImgLocation, oriImgName, roomImgFile.getBytes());
 
-            imgUrl = "/images/item/" + imgName;
+            imgUrl = "/images/room/" + imgName;
         }
 
         roomImg.updateRoomImg(oriImgName, imgName, imgUrl);
@@ -51,7 +51,7 @@ public class RoomImgService {
 
             String oriImgName = roomImgFile.getOriginalFilename();
             String imgName = fileService.uploadFile(roomImgLocation, oriImgName, roomImgFile.getBytes());
-            String imgUrl = "/images/item/" + imgName;
+            String imgUrl = "/images/room/" + imgName;
             savedRoomImg.updateRoomImg(oriImgName, imgName, imgUrl);
 
 

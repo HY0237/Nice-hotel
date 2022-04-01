@@ -27,7 +27,8 @@ public class ReservationController {
         return "reservation/reservations";
     }
 
-    @GetMapping(value = "/reservations/new")
+
+    @GetMapping(value ={ "/reservation", "/reservation/{page}"})
     public String reservationNew(RoomSearchDto roomSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
         Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 3);
         Page<ReservationMainDto> rooms = roomService.getReserveRoomPage(roomSearchDto, pageable);
