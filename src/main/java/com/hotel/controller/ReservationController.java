@@ -2,8 +2,8 @@ package com.hotel.controller;
 
 
 import com.hotel.dto.ReservationMainDto;
+import com.hotel.dto.RoomFormDto;
 import com.hotel.dto.RoomSearchDto;
-import com.hotel.entity.Room;
 import com.hotel.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,13 +29,22 @@ public class ReservationController {
 
 
     @GetMapping(value ={ "/reservation", "/reservation/{page}"})
-    public String reservationNew(RoomSearchDto roomSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
+    public String reservation(RoomSearchDto roomSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
         Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 3);
         Page<ReservationMainDto> rooms = roomService.getReserveRoomPage(roomSearchDto, pageable);
         model.addAttribute("rooms", rooms);
         model.addAttribute("roomSearchDto", roomSearchDto);
         model.addAttribute("maxPage", 5);
         return "reservation/reservationMain";
+    }
+
+    @GetMapping(value = "/reservation/new/{roomId}")
+    public String reservationRoom(RoomSearchDto roomSearchDto, Model model, @PathVariable("roomId") Long roomId){
+
+        RoomFormDto roomFormDto = roomService.getRoomDtl(roomId);
+        model.addAttribute("roomFormDto", roomFormDto);
+        model.addAttribute("roomSearchDto", roomSearchDto);
+        return "reservation/reservationForm";
     }
 
 }

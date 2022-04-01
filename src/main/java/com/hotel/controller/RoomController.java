@@ -101,7 +101,7 @@ public class RoomController {
 
     @GetMapping(value = {"/admin/rooms", "/admin/rooms/{page}"})
     public String roomManage(RoomSearchDto roomSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
-        Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 3);
+        Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 4);
         Page<Room> rooms = roomService.getAdminRoomPage(roomSearchDto, pageable);
         model.addAttribute("rooms", rooms);
         model.addAttribute("roomSearchDto", roomSearchDto);

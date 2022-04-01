@@ -60,6 +60,7 @@
                   e.preventDefault();
                   page(0);
               });
+
           });
 
           function page(page){
@@ -68,10 +69,37 @@
 
               location.href="/reservation/" + page
               + "?searchQuery=" + searchQuery;
+
+          }
+
+          function booking(roomId){
+
+              var searchQuery = $("#searchQuery").val();
+              var searchAdults = $("#searchAdults").val();
+              var searchCheckIn = $("#searchCheckIn").val();
+              var searchCheckOut = $("#searchCheckOut").val();
+
+              location.href="/reservation/new/" + roomId+ "?searchQuery=" + searchQuery
+              + "&searchAdults=" + searchAdults
+              + "&searchCheckIn=" + searchCheckIn
+              + "&searchCheckOut=" + searchCheckOut;
           }
 
     </script>
 
+<style>
+
+    .column {
+    float: left;
+    width: 20%;
+    }
+
+    .row:after {
+    content: "";
+    display: table;
+    clear: both;
+    }
+    </style>
 
   <!-- ======= Header ======= -->
   <header th:replace="fragment/common :: header"></header><!-- End Header -->
@@ -90,16 +118,52 @@
       </nav>
     </div><!-- End Page Title -->
 
-
-
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">Search Room Avaliable</h5>
 
-              <form class="d-flex" th:action="@{/reservation}" method="get" th:object="${roomSearchDto}">
-                  <input type="text" th:field="*{searchQuery}" name="searchQuery" >
-                  <button class="btn btn-outline-success" type="submit">Search</button>
-              </form>
+              <div class="card">
+                <div class="card-body">
+                  <form th:action="@{/reservation}" method="get" th:object="${roomSearchDto}">
+
+                    <div class="row">
+
+                      <div class="column mb-2">
+                        <label style="margin: 5px 0;">CheckIn</label>
+                        <div class="col-sm-10" style="width:300px;">
+                          <input type="date" th:field="*{searchCheckIn}"class="form-control">
+                        </div>
+                      </div>
+
+                      <div class="column mb-2">
+                        <label>CheckOut</label>
+                        <div class="col-sm-10" style="width:300px;">
+                          <input type="date" th:field="*{searchCheckOut}"class="form-control">
+                        </div>
+                      </div>
+
+                      <div class="column mb-2">
+                        <label>Adults</label>
+                        <select th:field="*{searchAdults}" class="form-control"  style="width:auto;">
+                          <option value="1">1인</option>
+                          <option value="2">2인</option>
+                          <option value="3">3인</option>
+                          <option value="4">4인이상</option>
+                        </select>
+                      </div>
+
+                      <div class="column mb-2">
+                        <input type="text" th:field="*{searchQuery}" name="searchQuery">
+                      </div>
+
+                      <div class="column mb-2">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                      </div>
+                    </div>
+
+                  </form>
+                </div>
+              </div>
 
                   <div th:if="${not #strings.isEmpty(roomSearchDto.searchQuery)}" class="center">
                     <p class="h3 font-weight-bold" th:text="${roomSearchDto.searchQuery} + ' 검색 결과'"></p>
@@ -108,15 +172,22 @@
                   <div class="row">
                     <th:block th:each="room, status: ${rooms.getContent()}">
                       <div class="col-md-4 margin">
-                        <div class="card">
-                          <a th:href="'/admin/room/' +${room.id}" class="text-dark">
+                        <div class="card text-center">
+                            <input type="hidden" th:value="${room.id}" id="roomId" >
                             <img th:src="${room.imgUrl}" class="card-img-top" th:alt="${room.roomNm}" height="300">
-                            <div class="card-body">
+                            <div class="card-body justify-content-center">
+
                               <h4 class="card-title">[[${room.roomNm}]]</h4>
                               <p class="card-text">[[${room.roomType}]]</p>
                               <h3 class="card-title text-danger">[[${room.pricePerNight}]]원</h3>
+
+<!--                              <a th:href="'/reservation/new/' + ${room.id}" class="text-dark">-->
+                              <div class="d-flex justify-content-center">
+                                <button class="btn btn-outline-primary" th:onclick="'javascript:booking( '+${room.id}+' )'">Book Now</button>
+                              </div>
+<!--                              </a>-->
+
                             </div>
-                          </a>
                         </div>
                       </div>
                     </th:block>
