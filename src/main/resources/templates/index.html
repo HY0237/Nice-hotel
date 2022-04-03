@@ -65,15 +65,14 @@
 
           function booking(roomId){
 
-              var searchQuery = $("#searchQuery").val();
-              var searchAdults = $("#searchAdults").val();
-              var searchCheckIn = $("#searchCheckIn").val();
-              var searchCheckOut = $("#searchCheckOut").val();
+              var guest = $("#searchAdults").val();
+              var checkIn = $("#searchCheckIn").val();
+              var checkOut = $("#searchCheckOut").val();
 
-              location.href="/reservation/new/" + roomId+ "?searchQuery=" + searchQuery
-              + "&searchAdults=" + searchAdults
-              + "&searchCheckIn=" + searchCheckIn
-              + "&searchCheckOut=" + searchCheckOut;
+              location.href="/reservation/new/" + roomId
+              + "?checkIn=" + checkIn
+              + "&checkOut=" + checkOut
+              + "&guest=" + guest;
           }
 
     </script>

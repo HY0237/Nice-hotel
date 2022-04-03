@@ -25,8 +25,11 @@ public class Reservation extends BaseEntity{
     @Column(nullable = false)
     private LocalDate checkOut;
 
-    @Column(name="price", nullable = false)
+    @Column(nullable = false)
     private int price;
+
+    @Column
+    private int guest;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name= "member_id" )
@@ -35,6 +38,19 @@ public class Reservation extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     private Room room;
+
+    public static Reservation createReservation(LocalDate checkIn, LocalDate checkOut
+    , int price, int guest, Member member, Room room){
+        Reservation reservation = new Reservation();
+        reservation.setCheckIn(checkIn);
+        reservation.setCheckOut(checkOut);
+        reservation.setPrice(price);
+        reservation.setGuest(guest);
+        reservation.setMember(member);
+        reservation.setRoom(room);
+
+        return reservation;
+    }
 
 
 

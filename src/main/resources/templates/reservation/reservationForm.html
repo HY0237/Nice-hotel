@@ -8,6 +8,8 @@
   <title>Forms / Elements - NiceAdmin Bootstrap Template</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700|Open+Sans">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -96,15 +98,15 @@
 
   <script th:inline="javascript">
             $(document).ready(function(){
-                calculateToalPrice();
+                calculateTotalPrice();
 
             $("#checkout").change( function(){
-                calculateToalPrice();
+                calculateTotalPrice();
             });
 
             });
 
-            function calculateToalPrice(){
+            function calculateTotalPrice(){
 
             var date1 = new Date($("#checkin").val());
             var date2 = new Date($("#checkout").val());
@@ -114,10 +116,45 @@
 
             var price = $("#pricePerNight").val();
             var totalPrice = price*nights;
-            $("#totalPrice").html(totalPrice + '원');
+            $("#totalPrice").val(totalPrice);
             $("#nights").html(nights);
 
-        }
+            }
+
+            function reservation(){
+              var token = $("meta[name='_csrf']").attr("content");
+              var header = $("meta[name='_csrf_header']").attr("content");
+
+              var url = "/reservation/new";
+              var paramData = {
+                  checkIn : $("#checkin").val(),
+                  checkOut : $("#checkout").val(),
+                  price : $("#totalPrice").val(),
+                  guest : $("#guests").val(),
+                  roomId : $("#roomId").val(),
+                  name : $("#name").val(),
+                  email : $("#email").val()
+              };
+
+              var param = JSON.stringify(paramData);
+
+              $.ajax({
+                  url      : url,
+                  type     : "POST",
+                  contentType : "application/json",
+                  data     : param,
+                  beforeSend : function(xhr){
+                      /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
+                      xhr.setRequestHeader(header, token);
+                  },
+                  dataType : "json",
+                  cache   : false,
+                  success  : function(result, status){
+                      alert("에약이 완료 되었습니다.");
+                      location.href='/';
+                  }
+              });
+            }
 
     </script>
 
@@ -136,6 +173,8 @@
       <div class="card-body">
         <h2 class="card-title">Room Details</h2>
               <form role="form" method="post" enctype="multipart/form-data" th:object="${roomFormDto}">
+
+                <input type="hidden" id="roomId" th:value="${roomFormDto.id}">
 
                 <div class="d-flex">
 
@@ -171,7 +210,7 @@
 
 
                       <!-- Room Price Per Night -->
-                        <div class="row mb-3 justify-content-between">
+                        <div class="row mb-2 justify-content-between">
                           <label class="col-sm-8 col-form-label">PricePerNight</label>
                           <div class="col-sm-3 text-right">
                             <input type="hidden" th:field="${roomFormDto.pricePerNight}" id="pricePerNight">
@@ -180,18 +219,18 @@
                         </div>
 
                       <!-- CheckIn Date -->
-                      <div class="row mb-3 justify-content-between">
+                      <div class="row mb-2 justify-content-between">
                         <label class="col-sm-6 col-form-label">CheckIn</label>
                         <div class="col-sm-4">
-                          <input type="Date" id="checkin" th:value="${roomSearchDto.searchCheckIn}" class="form-control">
+                          <input type="Date" id="checkin" th:value="${reservationDto.checkIn}" class="form-control">
                         </div>
                       </div>
 
                       <!-- CheckOut Date -->
-                      <div class="row mb-3 justify-content-between">
+                      <div class="row mb-2 justify-content-between">
                         <label class="col-sm-6 col-form-label">CheckOut</label>
                         <div class="col-sm-4">
-                          <input type="Date" id="checkout" th:value="${roomSearchDto.searchCheckOut}"class="form-control">
+                          <input type="Date" id="checkout" th:value="${reservationDto.checkOut}"class="form-control">
                         </div>
                       </div>
 
@@ -199,7 +238,7 @@
                       <div class="row mb-4 justify-content-between">
                         <label class="col-sm-8 col-form-label">Guests</label>
                         <div class="col-sm-3 text-right">
-                          <input type="number" th:field="${roomSearchDto.searchAdults}" class="form-control" placeholder="최대 인원을 입력해주세요">
+                          <input type="number" id="guests" th:field="${reservationDto.guest}" class="form-control" placeholder="최대 인원을 입력해주세요">
                         </div>
                       </div>
 
@@ -208,7 +247,7 @@
                       <div class="row mb-4 justify-content-between">
                         <label class="col-sm-8 col-form-label">Your Name</label>
                         <div class="col-sm-4 text-right">
-                          <input type="text"  class="form-control" placeholder="이름">
+                          <input type="text"  id="name" th:field="${reservationDto.name}" class="form-control" placeholder="이름">
                         </div>
                       </div>
 
@@ -216,7 +255,7 @@
                       <div class="row mb-4 justify-content-between">
                         <label class="col-sm-5 col-form-label">Email</label>
                         <div class="col-sm-5 text-right">
-                          <input type="email"  class="form-control" placeholder="example@example.com">
+                          <input type="email"  id="email" th:field="${reservationDto.email}" class="form-control" placeholder="example@example.com">
                         </div>
                       </div>
 
@@ -232,11 +271,11 @@
 
                       <div class="text-right mgt-50">
                         <h5>결제 금액</h5>
-                        <h3 name="totalPrice" id="totalPrice" class="font-weight-bold"></h3>
+                        <input type="number" name="totalPrice" id="totalPrice" th:field="${reservationDto.price}" readonly>원
                       </div>
 
                       <div class="text-center">
-                        <button type="submit" class="btn btn-primary">예약하기</button>
+                        <button type="button" onclick="reservation()" class="btn btn-primary">예약하기</button>
                       </div>
 
 
@@ -244,6 +283,18 @@
                   </div>
                 </div>
               </form>
+
+              <div class="jumbotron jumbotron-fluid mgt-30">
+                <div class="container">
+                  <h4 class="display-5">룸 상세설명</h4>
+                  <hr class="my-4">
+                  <p class="lead" th:text="${roomFormDto.roomDetail}"></p>
+                </div>
+              </div>
+
+              <div th:each="roomImg : ${roomFormDto.roomImgDtoList}" class="text-center">
+                <img th:if="${not #strings.isEmpty(roomImg.imgUrl)}" th:src="${roomImg.imgUrl}" class="rounded mgb-15" width="800">
+              </div>
 
 
 
