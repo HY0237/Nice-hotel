@@ -1,10 +1,12 @@
 package com.hotel.controller;
 
 
-import com.hotel.dto.ReservationDto;
-import com.hotel.dto.ReservationMainDto;
-import com.hotel.dto.RoomFormDto;
-import com.hotel.dto.RoomSearchDto;
+import com.hotel.dto.reservation.ReservationDto;
+import com.hotel.dto.reservation.ReservationMainDto;
+import com.hotel.dto.reservation.ReservationSearchDto;
+import com.hotel.dto.room.RoomFormDto;
+import com.hotel.dto.room.RoomSearchDto;
+import com.hotel.entity.Reservation;
 import com.hotel.service.ReservationService;
 import com.hotel.service.RoomService;
 import lombok.RequiredArgsConstructor;
@@ -32,9 +34,31 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
-    @GetMapping(value = "/admin/reservations")
-    public String reservation(Model model){
+    // admin 예약 보기
+    @GetMapping(value = {"/admin/reservations", "/admin/reservations/{page}"})
+    public String reservation(ReservationSearchDto reservationSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
+        Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 4);
+        Page<Reservation> reservations = reservationService.getAdminReserPage(reservationSearchDto, pageable);
+        model.addAttribute("reservations", reservations);
+        model.addAttribute("reservationSearchDto", reservationSearchDto);
+        model.addAttribute("maxPage", 5);
         return "reservation/reservations";
+    }
+
+    //예약 디테일 보기
+    @GetMapping(value = "/admin/reservation/{reservationId}")
+    public String reservationDtl(@PathVariable("reservationId") Long reservationId, Model model){
+        try {
+            ReservationDto reservationDto = reservationService.getReservationDtl(reservationId);
+            RoomFormDto roomFormDto = roomService.getRoomDtl(reservationDto.getRoomId());
+            model.addAttribute("roomFormDto", roomFormDto);
+            model.addAttribute("reservationDto", reservationDto);
+        }catch (EntityNotFoundException e){
+            model.addAttribute("errorMessage", "존재하지 않는 예약입니다");
+            return "reservation/reservations";
+        }
+
+        return "reservation/reservationForm";
     }
 
 
@@ -42,7 +66,7 @@ public class ReservationController {
     @GetMapping(value ={ "/reservation", "/reservation/{page}"})
     public String reservation(RoomSearchDto roomSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
         Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 6);
-        Page<ReservationMainDto> rooms = roomService.getReserveRoomPage(roomSearchDto, pageable);
+        Page<ReservationMainDto> rooms = reservationService.getReserveRoomPage(roomSearchDto, pageable);
         model.addAttribute("rooms", rooms);
         model.addAttribute("roomSearchDto", roomSearchDto);
         model.addAttribute("maxPage", 5);
@@ -85,20 +109,6 @@ public class ReservationController {
         return new ResponseEntity<Long>(reservationId, HttpStatus.OK);
     }
 
-    //예약 수정
-    @GetMapping(value = "/admin/reservation/{reservationId}")
-    public String reservationDtl(@PathVariable("reservationId") Long reservationId, Model model){
-        try {
-            ReservationDto reservationDto = reservationService.getReservationDtl(reservationId);
-            RoomFormDto roomFormDto = roomService.getRoomDtl(reservationDto.getRoomId());
-            model.addAttribute("roomFormDto", roomFormDto);
-            model.addAttribute("reservationDto", reservationDto);
-        }catch (EntityNotFoundException e){
-            model.addAttribute("errorMessage", "존재하지 않는 예약입니다");
-            return "reservation/reservations";
-        }
 
-        return "reservation/reservationForm";
-    }
 
 }

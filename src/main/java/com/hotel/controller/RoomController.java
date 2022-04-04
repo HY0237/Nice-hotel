@@ -1,8 +1,8 @@
 package com.hotel.controller;
 
 
-import com.hotel.dto.RoomFormDto;
-import com.hotel.dto.RoomSearchDto;
+import com.hotel.dto.room.RoomFormDto;
+import com.hotel.dto.room.RoomSearchDto;
 import com.hotel.entity.Room;
 import com.hotel.service.RoomService;
 import lombok.RequiredArgsConstructor;

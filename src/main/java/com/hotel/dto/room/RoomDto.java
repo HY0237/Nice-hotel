@@ -1,4 +1,4 @@
-package com.hotel.dto;
+package com.hotel.dto.room;
 
 import lombok.Getter;
 import lombok.Setter;

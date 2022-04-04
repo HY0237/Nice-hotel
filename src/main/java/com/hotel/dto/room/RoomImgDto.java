@@ -1,4 +1,4 @@
-package com.hotel.dto;
+package com.hotel.dto.room;
 
 import com.hotel.entity.RoomImg;
 import lombok.Getter;

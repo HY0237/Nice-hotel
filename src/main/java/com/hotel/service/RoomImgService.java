@@ -1,7 +1,7 @@
 package com.hotel.service;
 
 import com.hotel.entity.RoomImg;
-import com.hotel.repository.RoomImgRepository;
+import com.hotel.repository.room.RoomImgRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.util.StringUtils;
 
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 
 @Service

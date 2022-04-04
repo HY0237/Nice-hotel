@@ -1,11 +1,11 @@
 package com.hotel.service;
 
 import com.hotel.constant.RoomType;
-import com.hotel.dto.RoomFormDto;
+import com.hotel.dto.room.RoomFormDto;
 import com.hotel.entity.Room;
 import com.hotel.entity.RoomImg;
-import com.hotel.repository.RoomImgRepository;
-import com.hotel.repository.RoomRepository;
+import com.hotel.repository.room.RoomImgRepository;
+import com.hotel.repository.room.RoomRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

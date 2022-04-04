@@ -1,13 +1,13 @@
 package com.hotel.service;
 
 import com.hotel.constant.RoomType;
-import com.hotel.dto.ReservationDto;
+import com.hotel.dto.reservation.ReservationDto;
 import com.hotel.entity.Member;
 import com.hotel.entity.Reservation;
 import com.hotel.entity.Room;
 import com.hotel.repository.MemberRepository;
-import com.hotel.repository.ReservationRepository;
-import com.hotel.repository.RoomRepository;
+import com.hotel.repository.reservation.ReservationRepository;
+import com.hotel.repository.room.RoomRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

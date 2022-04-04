@@ -34,10 +34,50 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <script src="../../codebase/dhtmlxscheduler.js?v=5.2.5"
+          type="text/javascript" charset="utf-8"></script>
+  <script src="../../codebase/ext/dhtmlxscheduler_year_view.js?v=5.2.5"
+          type="text/javascript" charset="utf-8"></script>
+
+
 </head>
 
 <body>
+
+    <script th:inline="javascript">
+
+          $(document).ready(function(){
+              scheduler.config.first_hour = 8;
+              scheduler.config.limit_time_select = true;
+
+              scheduler.init('scheduler_here',new Date(2017,5,30),"week");
+
+              $("#searchBtn").on("click",function(e) {
+                  e.preventDefault();
+                  page(0);
+              });
+          });
+
+          function page(page){
+              var searchDateType = $("#searchDateType").val();
+              var searchRoomType = $("#searchRoomType").val();
+              var searchBy = $("#searchBy").val();
+              var searchQuery = $("#searchQuery").val();
+
+              location.href="/admin/reservations/" + page + "?searchDateType=" + searchDateType
+              + "&searchRoomType=" + searchRoomType
+              + "&searchBy=" + searchBy
+              + "&searchQuery=" + searchQuery;
+          }
+
+    </script>
+
+
 
   <!-- ======= Header ======= -->
   <header th:replace="fragment/common :: header"></header><!-- End Header -->
@@ -49,6 +89,19 @@
 
   <main id="main" class="main">
 
+    <div class="container-fluid">
+      <div class="navbar navbar-inverse">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">dhtmlxScheduler</a>
+        </div>
+      </div>
+
+      <!--A container for Scheduler-->
+      <div class="dhx_cal_container panel" id="scheduler_here">
+        <!--The standard set of  Scheduler 'divs'-->
+      </div>
+    </div>
+
 
     <div class="container-xl">
       <div class="table-responsive">
@@ -57,108 +110,103 @@
             <div class="row">
               <div class="col-sm-8"><h2>Reservation <b>Details</b></h2></div>
               <div class="col-sm-4">
-                <div class="search-box">
-                  <i class="material-icons">&#xE8B6;</i>
-                  <input type="text" class="form-control" placeholder="Search&hellip;">
-                </div>
-              </div>
             </div>
           </div>
+
+          <form th:action="@{'/admin/reservations/' + ${reservations.number}}" role="form" method="get" th:object="${reservations}">
+
+            <div class="form-inline justify-content-end mb-3" th:object="${reservationSearchDto}">
+              <select th:field="*{searchDateType}" class="form-control" style="width:auto;">
+                <option value="all">Period</option>
+                <option value="1d">1 day</option>
+                <option value="1w">1 week</option>
+                <option value="1m">1 month</option>
+                <option value="6m">6 month</option>
+              </select>
+              <select th:field="*{searchRoomType}" class="form-control" style="width:auto;">
+                <option value="">RoomType</option>
+                <option value="SINGLE">Single</option>
+                <option value="DOUBLE">Double</option>
+                <option value="QUEEN">Queen</option>
+                <option value="SUITE">Suite</option>
+              </select>
+              <select th:field="*{searchBy}" class="form-control" style="width:auto;">
+                <option value="">Search By</option>
+                <option value="roomNm">Room_Name</option>
+                <option value="name">Client_Name</option>
+                <option value="email">Client_Email</option>
+              </select>
+              <input th:field="*{searchQuery}" type="text" class="form-control" placeholder="Search&hellip;">
+              <button id="searchBtn" type="submit" class="btn btn-primary">검색</button>
+            </div>
+
           <table class="table table-striped table-hover table-bordered">
             <thead>
             <tr>
-              <th>Reservation.No</th>
-              <th>Client_Id</th>
-              <th>Room</th>
+              <th>No.</th>
+              <th>Room Name</th>
+              <th>Room Type</th>
+              <th>Client Name</th>
+              <th>Client Email</th>
               <th>Check_In</th>
               <th>Check_Out</th>
-              <th>Status</th>
+              <th>Guests</th>
+              <th>Price</th>
               <th>Actions</th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-              <td>1</td>
-              <td>Thomas Hardy</td>
-              <td>Delux 4</td>
-              <td>2022.3.15</td>
-              <td>2022.3.49</td>
-              <td>Reserved</td>
+            <tr th:each="reservation, status: ${reservations.getContent()}">
+              <td th:text="${reservation.id}"></td>
+              <td th:text="${reservation.room.roomNm}"></td>
+              <td th:text="${reservation.room.roomType}"></td>
+              <td th:text="${reservation.member.name}"></td>
+              <td th:text="${reservation.member.email}"></td>
+              <td th:text="${reservation.checkIn}"></td>
+              <td th:text="${reservation.checkOut}"></td>
+              <td th:text="${reservation.guest}"></td>
+              <td th:text="${reservation.price}"></td>
               <td>
-                <a href="#" class="view" title="View" data-toggle="tooltip"><i class="material-icons">&#xE417;</i></a>
-                <a href="#" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-                <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Thomas Hardy</td>
-              <td>Delux 4</td>
-              <td>2022.3.15</td>
-              <td>2022.3.49</td>
-              <td>Reserved</td>
-              <td>
-                <a href="#" class="view" title="View" data-toggle="tooltip"><i class="material-icons">&#xE417;</i></a>
-                <a href="#" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-                <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
-              </td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>Thomas Hardy</td>
-              <td>Delux 4</td>
-              <td>2022.3.15</td>
-              <td>2022.3.49</td>
-              <td>Reserved</td>
-              <td>
-                <a href="#" class="view" title="View" data-toggle="tooltip"><i class="material-icons">&#xE417;</i></a>
-                <a href="#" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-                <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
-              </td>
-            </tr>
-            <tr>
-              <td>4</td>
-              <td>Thomas Hardy</td>
-              <td>Delux 4</td>
-              <td>2022.3.15</td>
-              <td>2022.3.49</td>
-              <td>Reserved</td>
-              <td>
-                <a href="#" class="view" title="View" data-toggle="tooltip"><i class="material-icons">&#xE417;</i></a>
-                <a href="#" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-                <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
-              </td>
-            </tr>
-            <tr>
-              <td>5</td>
-              <td>Thomas Hardy</td>
-              <td>Delux 4</td>
-              <td>2022.3.15</td>
-              <td>2022.3.49</td>
-              <td>Reserved</td>
-              <td>
-                <a href="#" class="view" title="View" data-toggle="tooltip"><i class="material-icons">&#xE417;</i></a>
-                <a href="#" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-                <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
+                <a th:href="'/admin/reservation/'+${reservation.id}"  class="view" title="View" data-toggle="tooltip"><i class="material-icons">&#xE417;</i></a>
+                <a th:href="'/admin/reservation/'+${reservation.id}"  class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+                <a th:href="'/admin/reservation/'+${reservation.id}" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
               </td>
             </tr>
             </tbody>
           </table>
 
           <div class="clearfix">
+
             <div class="add-new justify-content-end">
               <button type="button" class="btn btn-info add-new" onClick="location.href='/reservation'"><i class="fa fa-plus"></i> Add Reservation</button>
             </div>
-            <ul class="pagination justify-content-center" >
-              <li class="page-item disabled"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>
-              <li class="page-item"><a href="#" class="page-link">1</a></li>
-              <li class="page-item"><a href="#" class="page-link">2</a></li>
-              <li class="page-item active"><a href="#" class="page-link">3</a></li>
-              <li class="page-item"><a href="#" class="page-link">4</a></li>
-              <li class="page-item"><a href="#" class="page-link">5</a></li>
-              <li class="page-item"><a href="#" class="page-link"><i class="fa fa-angle-double-right"></i></a></li>
-            </ul>
+
+            <div th:with="start=${(reservations.number/maxPage)*maxPage + 1}, end=(${(reservations.totalPages == 0) ? 1 : (start + (maxPage - 1) < reservations.totalPages ? start + (maxPage - 1) : reservations.totalPages)})" >
+              <ul class="pagination justify-content-center" >
+
+                <li class="page-item" th:classappend="${reservations.first}?'disabled'">
+                  <a th:onclick="'javascript:page(' + ${reservations.number - 1} + ')'" aria-label='Previous' class="page-link">
+                    <i class="fa fa-angle-double-left"></i>
+                  </a>
+                </li>
+
+                <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}"
+                    th:classappend="${reservations.number eq page-1}?'active':''">
+                  <a th:onclick="'javascript:page(' + ${page - 1} + ')'" th:inline="text" class="page-link">[[${page}]]</a>
+                </li>
+
+
+                <li class="page-item" th:classappend="${reservations.last}?'disabled'">
+                  <a th:onclick="'javascript:page(' + ${reservations.number + 1} + ')'" aria-label='Next' class="page-link">
+                    <i class="fa fa-angle-double-right"></i>
+                  </a>
+                </li>
+
+              </ul>
+            </div>
           </div>
+
+          </form>
         </div>
       </div>
     </div>

@@ -1,13 +1,12 @@
 package com.hotel.service;
 
-import com.hotel.dto.ReservationMainDto;
-import com.hotel.dto.RoomFormDto;
-import com.hotel.dto.RoomImgDto;
-import com.hotel.dto.RoomSearchDto;
+import com.hotel.dto.room.RoomFormDto;
+import com.hotel.dto.room.RoomImgDto;
+import com.hotel.dto.room.RoomSearchDto;
 import com.hotel.entity.Room;
 import com.hotel.entity.RoomImg;
-import com.hotel.repository.RoomImgRepository;
-import com.hotel.repository.RoomRepository;
+import com.hotel.repository.room.RoomImgRepository;
+import com.hotel.repository.room.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -84,9 +83,5 @@ public class RoomService {
         return roomRepository.getAdminRoomPage(roomSearchDto, pageable);
     }
 
-    @Transactional(readOnly=true)
-    public Page<ReservationMainDto> getReserveRoomPage(RoomSearchDto roomSearchDto, Pageable pageable){
-        return roomRepository.getReserveRoomPage(roomSearchDto, pageable);
-    }
 
 }

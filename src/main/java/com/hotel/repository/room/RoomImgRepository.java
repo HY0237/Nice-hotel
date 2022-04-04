@@ -1,4 +1,4 @@
-package com.hotel.repository;
+package com.hotel.repository.room;
 
 import com.hotel.entity.RoomImg;
 import org.springframework.data.jpa.repository.JpaRepository;

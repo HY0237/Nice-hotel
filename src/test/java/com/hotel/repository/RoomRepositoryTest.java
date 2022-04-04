@@ -2,6 +2,7 @@ package com.hotel.repository;
 
 import com.hotel.constant.RoomType;
 import com.hotel.entity.Room;
+import com.hotel.repository.room.RoomRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

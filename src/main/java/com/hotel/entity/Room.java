@@ -1,13 +1,12 @@
 package com.hotel.entity;
 
 import com.hotel.constant.RoomType;
-import com.hotel.dto.RoomFormDto;
+import com.hotel.dto.room.RoomFormDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name="room")

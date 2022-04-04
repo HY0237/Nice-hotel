@@ -1,4 +1,4 @@
-package com.hotel.dto;
+package com.hotel.dto.reservation;
 
 import com.hotel.constant.RoomType;
 import com.querydsl.core.annotations.QueryProjection;

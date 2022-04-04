@@ -1,9 +1,9 @@
-package com.hotel.repository;
+package com.hotel.repository.room;
 
 import com.hotel.constant.RoomType;
 import com.hotel.dto.QReservationMainDto;
-import com.hotel.dto.ReservationMainDto;
-import com.hotel.dto.RoomSearchDto;
+import com.hotel.dto.reservation.ReservationMainDto;
+import com.hotel.dto.room.RoomSearchDto;
 import com.hotel.entity.QRoom;
 import com.hotel.entity.QRoomImg;
 import com.hotel.entity.Room;
@@ -19,7 +19,7 @@ import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class RoomRepositoryCustomImpl implements RoomRepositoryCustom{
+public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
 
     private JPAQueryFactory queryFactory;
 
