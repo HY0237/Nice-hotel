@@ -89,12 +89,6 @@
 
   <main id="main" class="main">
 
-    <div class="container-fluid">
-      <div class="navbar navbar-inverse">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="#">dhtmlxScheduler</a>
-        </div>
-      </div>
 
       <!--A container for Scheduler-->
       <div class="dhx_cal_container panel" id="scheduler_here">
@@ -167,9 +161,9 @@
               <td th:text="${reservation.guest}"></td>
               <td th:text="${reservation.price}"></td>
               <td>
-                <a th:href="'/admin/reservation/'+${reservation.id}"  class="view" title="View" data-toggle="tooltip"><i class="material-icons">&#xE417;</i></a>
-                <a th:href="'/admin/reservation/'+${reservation.id}"  class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-                <a th:href="'/admin/reservation/'+${reservation.id}" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
+                <a th:href="'/reservation/'+${reservation.id}"  class="view" title="View" data-toggle="tooltip"><i class="material-icons">&#xE417;</i></a>
+                <a th:href="'/reservation/'+${reservation.id}"  class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+                <a th:href="'/reservation/'+${reservation.id}" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
               </td>
             </tr>
             </tbody>
@@ -178,7 +172,7 @@
           <div class="clearfix">
 
             <div class="add-new justify-content-end">
-              <button type="button" class="btn btn-info add-new" onClick="location.href='/reservation'"><i class="fa fa-plus"></i> Add Reservation</button>
+              <button type="button" class="btn btn-info add-new" onClick="location.href='/admin/reservation'"><i class="fa fa-plus"></i> Add Reservation</button>
             </div>
 
             <div th:with="start=${(reservations.number/maxPage)*maxPage + 1}, end=(${(reservations.totalPages == 0) ? 1 : (start + (maxPage - 1) < reservations.totalPages ? start + (maxPage - 1) : reservations.totalPages)})" >

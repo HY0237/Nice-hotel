@@ -45,8 +45,8 @@ public class ReservationController {
         return "reservation/reservations";
     }
 
-    //예약 디테일 보기
-    @GetMapping(value = "/admin/reservation/{reservationId}")
+    //admin 예약 디테일 보기
+    @GetMapping(value = "/reservation/{reservationId}")
     public String reservationDtl(@PathVariable("reservationId") Long reservationId, Model model){
         try {
             ReservationDto reservationDto = reservationService.getReservationDtl(reservationId);
@@ -62,8 +62,8 @@ public class ReservationController {
     }
 
 
-    //예약 가능한 룸 검색
-    @GetMapping(value ={ "/reservation", "/reservation/{page}"})
+    //admin 예약 가능한 룸 검색
+    @GetMapping(value ={ "/admin/reservation", "/admin/reservation/{page}"})
     public String reservation(RoomSearchDto roomSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
         Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 6);
         Page<ReservationMainDto> rooms = reservationService.getReserveRoomPage(roomSearchDto, pageable);

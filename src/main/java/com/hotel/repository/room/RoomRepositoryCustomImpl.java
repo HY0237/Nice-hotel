@@ -4,11 +4,13 @@ import com.hotel.constant.RoomType;
 import com.hotel.dto.QReservationMainDto;
 import com.hotel.dto.reservation.ReservationMainDto;
 import com.hotel.dto.room.RoomSearchDto;
+import com.hotel.entity.QReservation;
 import com.hotel.entity.QRoom;
 import com.hotel.entity.QRoomImg;
 import com.hotel.entity.Room;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.thymeleaf.util.StringUtils;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -58,6 +61,47 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
         return StringUtils.isEmpty(searchQuery) ? null : QRoom.room.roomNm.like("%" + searchQuery + "%");
     }
 
+    private BooleanExpression searchMaxGuest(Integer guest){
+
+        if(guest == null){
+            guest = 1;
+        }
+
+        return QRoom.room.maxPeople.goe(guest);
+    }
+
+
+    private BooleanExpression searchDate(LocalDate checkIn, LocalDate checkOut){
+
+
+        LocalDate checkIn_default= LocalDate.now();
+        LocalDate checkOut_default = LocalDate.now();
+        checkOut_default=checkOut_default.plusDays(1);
+
+        if(checkIn == null && checkOut == null){
+            checkIn = checkIn_default;
+            checkOut = checkOut_default;
+        }
+
+        //case 1 : QcheckIn >= checkIn and QcheckOut < checkOut
+        BooleanExpression case1 =
+                QReservation.reservation.checkIn.goe(checkIn)
+                        .and(QReservation.reservation.checkIn.lt(checkOut));
+
+        //case 2 : QcheckOut > checkIn and QcheckOut <= checkOut
+        BooleanExpression case2 =
+                QReservation.reservation.checkOut.gt(checkIn)
+                        .and(QReservation.reservation.checkOut.loe(checkOut));
+
+        //case 3 : QcheckIn < checkIn and QcheckOut > checkOut
+        BooleanExpression case3 =
+                QReservation.reservation.checkIn.lt(checkIn)
+                        .and(QReservation.reservation.checkOut.gt(checkOut));
+
+
+        return case1.or(case2).or(case3);
+    }
+
     @Override
     public Page<Room> getAdminRoomPage(RoomSearchDto roomSearchDto, Pageable pageable) {
 
@@ -82,6 +126,7 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
     public Page<ReservationMainDto> getReserveRoomPage(RoomSearchDto roomSearchDto, Pageable pageable) {
         QRoom room = QRoom.room;
         QRoomImg roomImg = QRoomImg.roomImg;
+        QReservation reservation = QReservation.reservation;
 
         QueryResults<ReservationMainDto> results = queryFactory
                 .select(
@@ -95,8 +140,14 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
                 )
                 .from(roomImg)
                 .join(roomImg.room(), room)
-                .where(roomImg.repimgYn.eq("Y"))
-                .where(searchRoomByName(roomSearchDto.getSearchQuery()))
+                .where(room.id.notIn(
+                        JPAExpressions
+                                .select(reservation.room().id)
+                                .from(reservation)
+                                .where(searchDate(roomSearchDto.getSearchCheckIn(), roomSearchDto.getSearchCheckOut()))
+                ), roomImg.repimgYn.eq("Y"),
+                        searchRoomByName(roomSearchDto.getSearchQuery()),
+                        searchMaxGuest(roomSearchDto.getSearchAdults()))
                 .orderBy(room.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())

@@ -68,9 +68,15 @@
           function page(page){
 
               var searchQuery = $("#searchQuery").val();
+              var checkIn = $("#searchCheckIn").val();
+              var checkOut = $("#searchCheckOut").val();
+              var guest = $("#searchAdults").val();
 
-              location.href="/reservation/" + page
-              + "?searchQuery=" + searchQuery;
+              location.href="/admin/reservation/" + page
+              + "?searchQuery=" + searchQuery
+              + "&searchCheckIn=" + checkIn
+              + "&searchCheckOut=" + checkOut
+              + "&searchAdults=" + guest;
 
           }
 
