@@ -57,13 +57,13 @@
 
 <body>
 
-  <!-- ======= Header ======= -->
-  <header th:replace="fragment/common :: header"></header><!-- End Header -->
+        <!-- ======= Header ======= -->
+        <header th:replace="fragment/common :: header"></header><!-- End Header -->
 
-  <!-- ======= Sidebar ======= -->
-  <aside th:replace="fragment/common:: sidebar"></aside>
+        <!-- ======= Sidebar ======= -->
+        <aside th:replace="fragment/common:: sidebar"></aside>
 
-  <style>
+        <style>
 
         .my-5{
             margin-top:20px;
@@ -94,9 +94,7 @@
         }
     </style>
 
-
-
-  <script th:inline="javascript">
+        <script th:inline="javascript">
             $(document).ready(function(){
                 calculateTotalPrice();
 
@@ -158,191 +156,160 @@
 
     </script>
 
+        <!-- ======= Reservation Form Main ======= -->
+        <main id="main" class="main">
 
-  <main id="main" class="main">
+            <!-- Reservation title -->
+            <div class="pagetitle">
+              <h1>Reservation Form</h1>
+              <nav>
+              </nav>
+            </div>
 
-    <div class="pagetitle">
-      <h1>Reservation Form</h1>
-      <nav>
-      </nav>
-    </div><!-- End Page Title -->
+            <!-- Reservation Form -->
+            <div class="card">
+              <div class="card-body">
+                <h2 class="card-title">Room Details</h2>
 
-    <!-- Reservation detail -->
+                      <!-- Reservation Top Form -->
+                      <form role="form" method="post" enctype="multipart/form-data" th:object="${roomFormDto}">
 
-    <div class="card">
-      <div class="card-body">
-        <h2 class="card-title">Room Details</h2>
-              <form role="form" method="post" enctype="multipart/form-data" th:object="${roomFormDto}">
+                        <input type="hidden" id="roomId" th:value="${roomFormDto.id}">
 
-                <input type="hidden" id="roomId" th:value="${roomFormDto.id}">
+                        <div class="d-flex">
 
-                <div class="d-flex">
+                          <!-- Left Form -->
+                          <div class="repImgDiv">
+                            <!-- Room Type -->
+                            <div th:if="${roomFormDto.roomType == T(com.hotel.constant.RoomType).SINGLE}" class="badge badge-primary mgb-15">
+                              Single
+                            </div>
+                            <span th:if="${roomFormDto.roomType == T(com.hotel.constant.RoomType).DOUBLE}" class="badge badge-primary mgb-15">
+                              Double
+                            </span>
+                            <span th:if="${roomFormDto.roomType == T(com.hotel.constant.RoomType).QUEEN}" class="badge badge-primary mgb-15">
+                              Queen
+                            </span>
+                            <span th:if="${roomFormDto.roomType == T(com.hotel.constant.RoomType).SUITE}" class="badge badge-primary mgb-15">
+                              Suite
+                            </span>
 
-                  <!-- Room Image -->
-                  <div class="repImgDiv">
-                    <div th:if="${roomFormDto.roomType == T(com.hotel.constant.RoomType).SINGLE}" class="badge badge-primary mgb-15">
-                      Single
-                    </div>
-                    <span th:if="${roomFormDto.roomType == T(com.hotel.constant.RoomType).DOUBLE}" class="badge badge-primary mgb-15">
-                      Double
-                    </span>
-                    <span th:if="${roomFormDto.roomType == T(com.hotel.constant.RoomType).QUEEN}" class="badge badge-primary mgb-15">
-                      Queen
-                    </span>
-                    <span th:if="${roomFormDto.roomType == T(com.hotel.constant.RoomType).SUITE}" class="badge badge-primary mgb-15">
-                      Suite
-                    </span>
+                            <!-- Room Name -->
+                            <div class="h4" th:text="${roomFormDto.roomNm}"></div>
 
-                    <!-- Room Name -->
-                    <div class="h4" th:text="${roomFormDto.roomNm}"></div>
-
-                    <img th:src="*{roomImgDtoList[0].imgUrl}" class = "rounded repImg" th:alt="*{roomNm}" height="180">
-                  </div>
-
-
-                  <!-- Right  Form -->
-                  <div class="wd50">
-
-
-                    <hr class="my-5">
-                    <!-- Room Reservation Detail -->
-                    <div class="justify-content-center">
-
-
-                      <!-- Room Price Per Night -->
-                        <div class="row mb-2 justify-content-between">
-                          <label class="col-sm-8 col-form-label">PricePerNight</label>
-                          <div class="col-sm-3 text-right">
-                            <input type="hidden" th:field="${roomFormDto.pricePerNight}" id="pricePerNight">
-                            <span th:text="${roomFormDto.pricePerNight}"></span>원
+                            <!-- Room Image -->
+                            <img th:src="*{roomImgDtoList[0].imgUrl}" class = "rounded repImg" th:alt="*{roomNm}" height="180">
                           </div>
-                        </div>
 
-                      <!-- CheckIn Date -->
-                      <div class="row mb-2 justify-content-between">
-                        <label class="col-sm-6 col-form-label">CheckIn</label>
-                        <div class="col-sm-4">
-                          <input type="Date" id="checkin" th:value="${reservationDto.checkIn}" class="form-control">
+                          <!-- Right Form -->
+                          <div class="wd50">
+
+                            <hr class="my-5">
+
+                            <!-- Room Reservation Detail -->
+                            <div class="justify-content-center">
+
+                              <!-- Room Price/Night -->
+                              <div class="row mb-2 justify-content-between">
+                                <label class="col-sm-8 col-form-label">PricePerNight</label>
+                                <div class="col-sm-3 text-right">
+                                  <input type="hidden" th:field="${roomFormDto.pricePerNight}" id="pricePerNight">
+                                  <span th:text="${roomFormDto.pricePerNight}"></span>원
+                                </div>
+                              </div>
+
+                              <!-- CheckIn Date -->
+                              <div class="row mb-2 justify-content-between">
+                                <label class="col-sm-6 col-form-label">CheckIn</label>
+                                <div class="col-sm-4">
+                                  <input type="Date" id="checkin" th:value="${reservationDto.checkIn}" class="form-control">
+                                </div>
+                              </div>
+
+                              <!-- CheckOut Date -->
+                              <div class="row mb-2 justify-content-between">
+                                <label class="col-sm-6 col-form-label">CheckOut</label>
+                                <div class="col-sm-4">
+                                  <input type="Date" id="checkout" th:value="${reservationDto.checkOut}"class="form-control">
+                                </div>
+                              </div>
+
+                              <!-- Room Guest -->
+                              <div class="row mb-4 justify-content-between">
+                                <label class="col-sm-8 col-form-label">Guests</label>
+                                <div class="col-sm-3 text-right">
+                                  <input type="number" id="guests" th:field="${reservationDto.guest}" class="form-control" placeholder="최대 인원을 입력해주세요">
+                                </div>
+                              </div>
+
+
+                              <!-- Room Client Name -->
+                              <div class="row mb-4 justify-content-between">
+                                <label class="col-sm-8 col-form-label">Your Name</label>
+                                <div class="col-sm-4 text-right">
+                                  <input type="text"  id="name" th:field="${reservationDto.name}" class="form-control" placeholder="이름">
+                                </div>
+                              </div>
+
+                              <!-- Room Client Email -->
+                              <div class="row mb-4 justify-content-between">
+                                <label class="col-sm-5 col-form-label">Email</label>
+                                <div class="col-sm-5 text-right">
+                                  <input type="email"  id="email" th:field="${reservationDto.email}" class="form-control" placeholder="example@example.com">
+                                </div>
+                              </div>
+
+                              <!-- Total Nights -->
+                              <div class="row mb-3 justify-content-between">
+                                <label class="col-sm-6 col-form-label">Nights</label>
+                                <div class="col-sm-3 text-right">
+                                  <span name="nights" id="nights" ></span> Days
+                                </div>
+                              </div>
+
+                              <!-- Total Price -->
+                              <div class="text-right mgt-50">
+                                <h5>결제 금액</h5>
+                                <input type="number" name="totalPrice" id="totalPrice" th:field="${reservationDto.price}" readonly>원
+                              </div>
+
+
+                              <!-- Reservation Button -->
+                              <div th:if="${#strings.isEmpty(reservationDto.id)}" style="margin: 3px;">
+                                <div class="text-center">
+                                  <button type="button" onclick="reservation()" class="btn btn-primary">예약하기</button>
+                                </div>
+                              </div>
+
+
+                            </div>
+                          </div>
+
+                        </div>
+                      </form>
+
+                      <!-- Room Details -->
+                      <div class="jumbotron jumbotron-fluid mgt-30">
+                        <div class="container">
+                          <h4 class="display-5">룸 상세설명</h4>
+                          <hr class="my-4">
+                          <p class="lead" th:text="${roomFormDto.roomDetail}"></p>
                         </div>
                       </div>
 
-                      <!-- CheckOut Date -->
-                      <div class="row mb-2 justify-content-between">
-                        <label class="col-sm-6 col-form-label">CheckOut</label>
-                        <div class="col-sm-4">
-                          <input type="Date" id="checkout" th:value="${reservationDto.checkOut}"class="form-control">
-                        </div>
-                      </div>
-
-                      <!-- Room Guest -->
-                      <div class="row mb-4 justify-content-between">
-                        <label class="col-sm-8 col-form-label">Guests</label>
-                        <div class="col-sm-3 text-right">
-                          <input type="number" id="guests" th:field="${reservationDto.guest}" class="form-control" placeholder="최대 인원을 입력해주세요">
-                        </div>
-                      </div>
-
-
-                      <!-- Room Client Name -->
-                      <div class="row mb-4 justify-content-between">
-                        <label class="col-sm-8 col-form-label">Your Name</label>
-                        <div class="col-sm-4 text-right">
-                          <input type="text"  id="name" th:field="${reservationDto.name}" class="form-control" placeholder="이름">
-                        </div>
-                      </div>
-
-                      <!-- Room Client Email -->
-                      <div class="row mb-4 justify-content-between">
-                        <label class="col-sm-5 col-form-label">Email</label>
-                        <div class="col-sm-5 text-right">
-                          <input type="email"  id="email" th:field="${reservationDto.email}" class="form-control" placeholder="example@example.com">
-                        </div>
+                      <!-- Room Images -->
+                      <div th:each="roomImg : ${roomFormDto.roomImgDtoList}" class="text-center">
+                        <img th:if="${not #strings.isEmpty(roomImg.imgUrl)}" th:src="${roomImg.imgUrl}" class="rounded mgb-15" width="800">
                       </div>
 
 
 
-                      <!-- Total Nights -->
-                      <div class="row mb-3 justify-content-between">
-                        <label class="col-sm-6 col-form-label">Nights</label>
-                        <div class="col-sm-3 text-right">
-                          <span name="nights" id="nights" ></span> Days
-                        </div>
-                      </div>
-
-                      <!-- Total Price -->
-                      <div class="text-right mgt-50">
-                        <h5>결제 금액</h5>
-                        <input type="number" name="totalPrice" id="totalPrice" th:field="${reservationDto.price}" readonly>원
-                      </div>
-
-
-                      <!-- Reservation Button -->
-                      <div th:if="${#strings.isEmpty(reservationDto.id)}" style="margin: 3px;">
-                        <div class="text-center">
-                          <button type="button" onclick="reservation()" class="btn btn-primary">예약하기</button>
-                        </div>
-                      </div>
-
-
-                    </div>
-                  </div>
-                </div>
-              </form>
-
-              <!-- Room Details -->
-              <div class="jumbotron jumbotron-fluid mgt-30">
-                <div class="container">
-                  <h4 class="display-5">룸 상세설명</h4>
-                  <hr class="my-4">
-                  <p class="lead" th:text="${roomFormDto.roomDetail}"></p>
-                </div>
               </div>
+            </div>
+      </main>
 
-              <!-- Room Images -->
-              <div th:each="roomImg : ${roomFormDto.roomImgDtoList}" class="text-center">
-                <img th:if="${not #strings.isEmpty(roomImg.imgUrl)}" th:src="${roomImg.imgUrl}" class="rounded mgb-15" width="800">
-              </div>
-
-
-
-        </div>
-      </div>
-      <!-- End of card -->
-
-
-
-
-
-  </main><!-- End #main -->
-
-  <!-- ======= Footer ======= -->
-  <footer id="footer" class="footer">
-    <div class="copyright">
-      &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
-    </div>
-    <div class="credits">
-      <!-- All the links in the footer should remain intact. -->
-      <!-- You can delete the links only if you purchased the pro version. -->
-      <!-- Licensing information: https://bootstrapmade.com/license/ -->
-      <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-      Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-    </div>
-  </footer><!-- End Footer -->
-
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-  <!-- Vendor JS Files -->
-  <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/chart.js/chart.min.js"></script>
-  <script src="assets/vendor/echarts/echarts.min.js"></script>
-  <script src="assets/vendor/quill/quill.min.js"></script>
-  <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
-  <script src="assets/vendor/tinymce/tinymce.min.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
-
-  <!-- Template Main JS File -->
-  <script src="assets/js/main.js"></script>
+        <!-- ======= Footer ======= -->
+        <div th:replace="fragment/common :: footer"></div>
 
 </body>
 

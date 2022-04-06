@@ -35,11 +35,4 @@ public class MainController {
 
 
 
-    @GetMapping(value = "/admin/clients")
-    public String client(Model model){
-        return "client/clients";
-    }
-
-
-
 }

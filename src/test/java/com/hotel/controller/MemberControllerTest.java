@@ -35,6 +35,7 @@ class MemberControllerTest {
         memberFormDto.setEmail(email);
         memberFormDto.setName("이헤영");
         memberFormDto.setPassword(password);
+        memberFormDto.setPhoneNum("010-222-2222");
         Member member = Member.createMember(memberFormDto, passwordEncoder);
         return memberService.saveMember(member);
     }

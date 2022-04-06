@@ -34,7 +34,7 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
-    // admin 예약 보기
+    // (관리자) 예약 내역 보기
     @GetMapping(value = {"/admin/reservations", "/admin/reservations/{page}"})
     public String reservation(ReservationSearchDto reservationSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
         Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 4);
@@ -45,8 +45,8 @@ public class ReservationController {
         return "reservation/reservations";
     }
 
-    //admin 예약 디테일 보기
-    @GetMapping(value = "/reservation/{reservationId}")
+    // (관리자) 예약 내역 상세보기
+    @GetMapping(value = "/admin/reservation/detail/{reservationId}")
     public String reservationDtl(@PathVariable("reservationId") Long reservationId, Model model){
         try {
             ReservationDto reservationDto = reservationService.getReservationDtl(reservationId);
@@ -62,7 +62,7 @@ public class ReservationController {
     }
 
 
-    //admin 예약 가능한 룸 검색
+    // (관리자) 예약 가능한 룸 검색
     @GetMapping(value ={ "/admin/reservation", "/admin/reservation/{page}"})
     public String reservation(RoomSearchDto roomSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
         Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 6);
@@ -74,7 +74,7 @@ public class ReservationController {
     }
 
 
-    //예약 작성
+    //객실 예약 추가
     @GetMapping(value = "/reservation/new/{roomId}")
     public String reservationRoom(ReservationDto reservationDto, Model model, @PathVariable("roomId") Long roomId){
 
@@ -84,7 +84,7 @@ public class ReservationController {
         return "reservation/reservationForm";
     }
 
-    //예약 저장
+    //객실 예약 저장
     @PostMapping(value= "/reservation/new")
     public @ResponseBody
     ResponseEntity reservationNew(@RequestBody @Valid ReservationDto reservationDto, BindingResult bindingResult){

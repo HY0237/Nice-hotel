@@ -2,7 +2,7 @@ package com.hotel.service;
 
 
 import com.hotel.entity.Member;
-import com.hotel.repository.MemberRepository;
+import com.hotel.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,12 +1,10 @@
 package com.hotel.entity;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 
-import com.hotel.repository.MemberRepository;
+import com.hotel.repository.member.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

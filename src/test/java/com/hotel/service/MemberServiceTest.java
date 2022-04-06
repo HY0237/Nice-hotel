@@ -29,6 +29,7 @@ class MemberServiceTest {
         memberFormDto.setEmail("test@gmail.com");
         memberFormDto.setName("test");
         memberFormDto.setPassword("1234");
+        memberFormDto.setPhoneNum("123-24-5235");
         return Member.createMember(memberFormDto, passwordEncoder);
     }
 

@@ -29,12 +29,14 @@ public class RoomController {
 
     private final RoomService roomService;
 
+    // 객실 추가
     @GetMapping(value = "/admin/room/new")
     public String roomForm(Model model){
         model.addAttribute("roomFormDto", new RoomFormDto());
         return "room/roomForm";
     }
 
+    // 객실 추가
     @PostMapping(value = "/admin/room/new")
     public String roomNew(@Valid RoomFormDto roomFormDto, BindingResult bindingResult, Model model,
                           @RequestParam("roomImgFile") List<MultipartFile> roomImgFileList){
@@ -58,6 +60,7 @@ public class RoomController {
         return "redirect:/admin/rooms";
     }
 
+    // 객실 상세보기
     @GetMapping(value = "/admin/room/{roomId}")
     public String roomDtl(@PathVariable("roomId") Long roomId, Model model){
 
@@ -73,6 +76,7 @@ public class RoomController {
         return "room/roomForm";
     }
 
+    // 객실 수정
     @PostMapping(value = "/admin/room/{roomId}")
     public String roomUpdate(@Valid RoomFormDto roomFormDto, BindingResult bindingResult, Model model,
                              @RequestParam("roomImgFile") List<MultipartFile> roomImgFileList){
@@ -99,6 +103,7 @@ public class RoomController {
     }
 
 
+    // 객실 조히
     @GetMapping(value = {"/admin/rooms", "/admin/rooms/{page}"})
     public String roomManage(RoomSearchDto roomSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
         Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 4);

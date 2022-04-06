@@ -36,156 +36,149 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
 
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 </head>
 
 <body>
 
-  <script th:inline="javascript">
+        <script th:inline="javascript">
 
-          $(document).ready(function(){
-              $("#searchBtn").on("click",function(e) {
-                  e.preventDefault();
-                  page(0);
-              });
-          });
+                $(document).ready(function(){
+                    $("#searchBtn").on("click",function(e) {
+                        e.preventDefault();
+                        page(0);
+                    });
+                });
 
-          function page(page){
-              var searchDateType = $("#searchDateType").val();
-              var searchRoomType = $("#searchRoomType").val();
-              var searchQuery = $("#searchQuery").val();
+                function page(page){
+                    var searchDateType = $("#searchDateType").val();
+                    var searchRoomType = $("#searchRoomType").val();
+                    var searchQuery = $("#searchQuery").val();
 
-              location.href="/admin/rooms/" + page + "?searchDateType=" + searchDateType
-              + "&searchRoomType=" + searchRoomType
-              + "&searchQuery=" + searchQuery;
-          }
+                    location.href="/admin/rooms/" + page + "?searchDateType=" + searchDateType
+                    + "&searchRoomType=" + searchRoomType
+                    + "&searchQuery=" + searchQuery;
+                }
 
-    </script>
+          </script>
 
-  <header th:replace="fragment/common :: header"></header><!-- End Header -->
+        <!-- ======= Header ======= -->
+        <header th:replace="fragment/common :: header"></header>
 
-  <!-- ======= Sidebar ======= -->
-  <aside th:replace="fragment/common:: sidebar">
+        <!-- ======= Sidebar ======= -->
+        <aside th:replace="fragment/common:: sidebar"></aside>
 
-  </aside>
-
-
-  <main id="main" class="main">
+        <!-- ======= Room Pages Main ======= -->
+        <main id="main" class="main">
 
 
-    <div class="container-xl">
-      <div class="table-responsive">
-        <div class="table-wrapper">
-          <div class="table-title">
-            <div class="row">
-              <div class="col-sm-8"><h2>Room <b>Details</b></h2></div>
-              <div class="col-sm-4">
+          <div class="container-xl">
+            <div class="table-responsive">
+              <div class="table-wrapper">
+                <div class="table-title">
+                  <div class="row">
+                    <div class="col-sm-8"><h2>Room <b>Details</b></h2></div>
+                  </div>
+                </div>
+
+                <form th:action="@{'/admin/rooms/' + ${rooms.number}}" role="form" method="get" th:object="${rooms}">
+
+                  <!-- ======= searchBar ======= -->
+                  <div class="form-inline justify-content-end mb-3" th:object="${roomSearchDto}">
+                    <select th:field="*{searchDateType}" class="form-control" style="width:auto;">
+                      <option value="all">Period</option>
+                      <option value="1d">1 day</option>
+                      <option value="1w">1 week</option>
+                      <option value="1m">1 month</option>
+                      <option value="6m">6 month</option>
+                    </select>
+                    <select th:field="*{searchRoomType}" class="form-control" style="width:auto;">
+                      <option value="">RoomType</option>
+                      <option value="SINGLE">Single</option>
+                      <option value="DOUBLE">Double</option>
+                      <option value="QUEEN">Queen</option>
+                      <option value="SUITE">Suite</option>
+                    </select>
+                    <input th:field="*{searchQuery}" type="text" class="form-control" placeholder="Search&hellip;">
+                    <button id="searchBtn" type="submit" class="btn btn-primary">검색</button>
+                  </div>
+
+                  <!-- ======= Room Table ======= -->
+                  <table class="table table-striped table-hover table-bordered">
+                  <thead>
+                  <tr>
+                    <th>No.</th>
+                    <th>Room Name</th>
+                    <th>Room Type</th>
+                    <th>MaxGuest</th>
+                    <th>PricePerNight</th>
+                    <th>Actions</th>
+                  </tr>
+                  </thead>
+
+                  <tbody>
+                  <tr th:each="room, status: ${rooms.getContent()}">
+                    <td th:text="${room.id}"></td>
+                    <td>
+                      <a th:text="${room.roomNm}"></a>
+                    </td>
+                    <td th:text="${room.roomType}"></td>
+                    <td th:text="${room.maxPeople}"></td>
+                    <td th:text="${room.pricePerNight}"></td>
+                    <td>
+                      <a th:href="'/admin/room/'+${room.id}" class="view" title="View" data-toggle="tooltip"><i class="material-icons">&#xE417;</i></a>
+                      <a th:href="'/admin/room/'+${room.id}" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+                      <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+
+                  <!-- =======  Paging  ======= -->
+                  <div class="clearfix">
+
+                    <!-- ======= Room Add Button  ======= -->
+                    <div class="add-new justify-content-end">
+                      <button type="button" class="btn btn-info add-new" onClick="location.href='/admin/room/new'"><i class="fa fa-plus"></i> Add Room</button>
+                    </div>
+
+                    <!-- ======= Room Table Pagination  ======= -->
+                    <div th:with="start=${(rooms.number/maxPage)*maxPage + 1}, end=(${(rooms.totalPages == 0) ? 1 : (start + (maxPage - 1) < rooms.totalPages ? start + (maxPage - 1) : rooms.totalPages)})" >
+                      <ul class="pagination justify-content-center" >
+
+                        <li class="page-item" th:classappend="${rooms.first}?'disabled'">
+                          <a th:onclick="'javascript:page(' + ${rooms.number - 1} + ')'" aria-label='Previous' class="page-link">
+                            <i class="fa fa-angle-double-left"></i>
+                          </a>
+                        </li>
+
+                        <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}"
+                            th:classappend="${rooms.number eq page-1}?'active':''">
+                          <a th:onclick="'javascript:page(' + ${page - 1} + ')'" th:inline="text" class="page-link">[[${page}]]</a>
+                        </li>
+
+
+                        <li class="page-item" th:classappend="${rooms.last}?'disabled'">
+                          <a th:onclick="'javascript:page(' + ${rooms.number + 1} + ')'" aria-label='Next' class="page-link">
+                            <i class="fa fa-angle-double-right"></i>
+                          </a>
+                        </li>
+
+                      </ul>
+                    </div>
+
+
+                  </div>
+                </form>
               </div>
             </div>
           </div>
 
-          <form th:action="@{'/admin/rooms/' + ${rooms.number}}" role="form" method="get" th:object="${rooms}">
 
-            <!-- ======= searchbar ======= -->
-            <div class="form-inline justify-content-end mb-3" th:object="${roomSearchDto}">
-              <select th:field="*{searchDateType}" class="form-control" style="width:auto;">
-                <option value="all">Period</option>
-                <option value="1d">1 day</option>
-                <option value="1w">1 week</option>
-                <option value="1m">1 month</option>
-                <option value="6m">6 month</option>
-              </select>
-              <select th:field="*{searchRoomType}" class="form-control" style="width:auto;">
-                <option value="">RoomType</option>
-                <option value="SINGLE">Single</option>
-                <option value="DOUBLE">Double</option>
-                <option value="QUEEN">Queen</option>
-                <option value="SUITE">Suite</option>
-              </select>
-              <input th:field="*{searchQuery}" type="text" class="form-control" placeholder="Search&hellip;">
-              <button id="searchBtn" type="submit" class="btn btn-primary">검색</button>
-            </div>
+        </main>
 
-            <!-- ======= Room Table ======= -->
-            <table class="table table-striped table-hover table-bordered">
-            <thead>
-            <tr>
-              <th>Room.No</th>
-              <th>Name</th>
-              <th>Type</th>
-              <th>MaxGuest</th>
-              <th>PricePerNight</th>
-            </tr>
-            </thead>
-
-            <tbody>
-            <tr th:each="room, status: ${rooms.getContent()}">
-              <td th:text="${room.id}"></td>
-              <td>
-                <a th:text="${room.roomNm}"></a>
-              </td>
-              <td th:text="${room.roomType}"></td>
-              <td th:text="${room.maxPeople}"></td>
-              <td th:text="${room.pricePerNight}"></td>
-              <td>
-                <a th:href="'/admin/room/'+${room.id}" class="view" title="View" data-toggle="tooltip"><i class="material-icons">&#xE417;</i></a>
-                <a th:href="'/admin/room/'+${room.id}" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-                <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-
-            <!-- =======  Paging  ======= -->
-
-            <div class="clearfix">
-
-              <!-- ======= Room Add Button  ======= -->
-              <div class="add-new justify-content-end">
-                <button type="button" class="btn btn-info add-new" onClick="location.href='/admin/room/new'"><i class="fa fa-plus"></i> Add Room</button>
-              </div>
-
-              <!-- ======= Room Table Page  ======= -->
-
-              <div th:with="start=${(rooms.number/maxPage)*maxPage + 1}, end=(${(rooms.totalPages == 0) ? 1 : (start + (maxPage - 1) < rooms.totalPages ? start + (maxPage - 1) : rooms.totalPages)})" >
-                <ul class="pagination justify-content-center" >
-
-                  <li class="page-item" th:classappend="${rooms.first}?'disabled'">
-                    <a th:onclick="'javascript:page(' + ${rooms.number - 1} + ')'" aria-label='Previous' class="page-link">
-                      <i class="fa fa-angle-double-left"></i>
-                    </a>
-                  </li>
-
-                  <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}"
-                      th:classappend="${rooms.number eq page-1}?'active':''">
-                    <a th:onclick="'javascript:page(' + ${page - 1} + ')'" th:inline="text" class="page-link">[[${page}]]</a>
-                  </li>
-
-
-                  <li class="page-item" th:classappend="${rooms.last}?'disabled'">
-                    <a th:onclick="'javascript:page(' + ${rooms.number + 1} + ')'" aria-label='Next' class="page-link">
-                      <i class="fa fa-angle-double-right"></i>
-                    </a>
-                  </li>
-
-                </ul>
-              </div>
-
-
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
-
-  </main><!-- End #main -->
-
-  <!-- ======= Footer ======= -->
-    <div th:replace="fragment/common :: footer"></div>
+        <!-- ======= Footer ======= -->
+        <div th:replace="fragment/common :: footer"></div>
 
 </body>
 
