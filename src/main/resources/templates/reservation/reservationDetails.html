@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+  <title>Forms / Elements - NiceAdmin Bootstrap Template</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700|Open+Sans">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!-- Favicons -->
+  <link href="/assets/img/favicon.png" rel="icon">
+  <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="/assets/vendor/quill/quill.snow.css" rel="stylesheet">
+  <link href="/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+  <link href="/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="/assets/vendor/simple-datatables/style.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="/assets/css/style.css" rel="stylesheet">
+  <link href="/assets/css/card.css" rel="stylesheet">
+
+
+  <!-- =======================================================
+  * Template Name: NiceAdmin - v2.2.2
+  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+
+
+
+
+</head>
+
+<body>
+
+        <!-- ======= Header ======= -->
+        <header th:replace="fragment/common :: header"></header><!-- End Header -->
+
+        <!-- ======= Sidebar ======= -->
+        <aside th:replace="fragment/common:: sidebar"></aside>
+
+        <style>
+
+
+        .mgt-50{
+            margin-top:20px;
+        }
+        .content-mg{
+            margin-left:30%;
+            margin-right:30%;
+            margin-top:2%;
+            margin-bottom:100px;
+        }
+        .repImgDiv{
+            margin-right:25px;
+            margin-left:15px;
+            height:auto;
+            width:30%;
+        }
+        .repImg{
+            height:200px;
+            width:200px;
+        }
+        .card{
+            margin-left:20px;
+            float: none;
+            width:750px;
+            height:100%;
+            padding:30px;
+            margin-bottom:20px;
+        }
+        .fs18{
+            font-size:18px
+        }
+        .fs24{
+            font-size:24px
+        }
+        .wd50{
+            height:auto;
+            width:60%;
+        }
+    </style>
+
+<!--        <script th:inline="javascript">-->
+<!--        function cancelOrder(orderId) {-->
+<!--            var token = $("meta[name='_csrf']").attr("content");-->
+<!--            var header = $("meta[name='_csrf_header']").attr("content");-->
+
+<!--            var url = "/order/" + orderId + "/cancel";-->
+<!--            var paramData = {-->
+<!--                orderId : orderId,-->
+<!--            };-->
+
+<!--            var param = JSON.stringify(paramData);-->
+
+<!--            $.ajax({-->
+<!--                url      : url,-->
+<!--                type     : "POST",-->
+<!--                contentType : "application/json",-->
+<!--                data     : param,-->
+<!--                beforeSend : function(xhr){-->
+<!--                    /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */-->
+<!--                    xhr.setRequestHeader(header, token);-->
+<!--                },-->
+<!--                dataType : "json",-->
+<!--                cache   : false,-->
+<!--                success  : function(result, status){-->
+<!--                    alert("주문이 취소 되었습니다.");-->
+<!--                    location.href='/orders/' + [[${page}]];-->
+<!--                },-->
+<!--                error : function(jqXHR, status, error){-->
+<!--                    if(jqXHR.status == '401'){-->
+<!--                        alert('로그인 후 이용해주세요');-->
+<!--                        location.href='/members/login';-->
+<!--                    } else{-->
+<!--                        alert(jqXHR.responseText);-->
+<!--                    }-->
+<!--                }-->
+<!--            });-->
+<!--        }-->
+<!--    </script>-->
+
+        <!-- ======= Reservation Form Main ======= -->
+        <main id="main" class="main">
+
+            <!-- Reservation title -->
+            <div class="pagetitle">
+              <h1>Reservation Details</h1>
+              <nav>
+              </nav>
+            </div>
+
+          <div th:each="reservation : ${reservations.getContent()}">
+
+            <div class="card">
+                <div class="d-flex">
+                    <div class="repImgDiv">
+                        <img th:src="${reservation.roomImgUri}" class = "rounded repImg" th:alt="${reservation.roomName}">
+                    </div>
+                    <div class="wd50 justify-content-center">
+                        <span th:text="${reservation.roomName}" class="fs24 font-weight-bold"></span>
+                        <div class="fs18 font-weight-light">
+                            Room Type : <span th:text="${reservation.roomType}"></span>
+                        </div>
+                        <div class="fs18 font-weight-light">
+                            Date : <span th:text="${reservation.checkIn}"></span>
+                            ~<span th:text="${reservation.checkOut}"></span>
+                        </div>
+                        <div class="fs18 font-weight-light">
+                            Guest : <span th:text="${reservation.guest}"></span>
+                        </div>
+                        <div class="fs18 font-weight-light">
+                            Booked by : <span th:text="${reservation.name}"></span>
+                        </div>
+                        <div class="fs18 font-weight-light">
+                            Email : <span th:text="${reservation.email}"></span>
+                        </div>
+                        <div class="fs18 font-weight-light">
+                            Reserved Date : <span th:text="${reservation.reservationDate}"></span>
+                        </div>
+                        <div class=text-right mgt-50>
+                            <h5>Total Fee</h5>
+                            <span th:text="${reservation.price} +' 원'" class="fs24 font-weight-bold"></span>
+                        </div>
+                        <div class="ml-3">
+                            <th:block th:if="${not #strings.isEmpty(reservation.id)}">
+                                <button type="button" class="btn btn-outline-secondary" th:value="${reservation.id}" >Cancel Reservation</button>
+                            </th:block>
+                            <th:block th:unless="${not #strings.isEmpty(reservation.id)}">
+                                <h4>(취소 완료)</h4>
+                            </th:block>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+          </div>
+
+
+      </main>
+
+        <!-- ======= Footer ======= -->
+        <div th:replace="fragment/common :: footer"></div>
+
+</body>
+
+</html>

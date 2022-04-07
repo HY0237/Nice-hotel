@@ -38,7 +38,7 @@ public class ReservationDto {
     private String email;
 
 
-    public static ReservationDto createReservationDto(Reservation reservation){
+    public static  ReservationDto createReservationDto(Reservation reservation){
         ReservationDto reservationDto = new ReservationDto();
         reservationDto.setId(reservation.getId());
         reservationDto.setCheckIn(reservation.getCheckIn());

@@ -8,4 +8,6 @@ import java.util.List;
 public interface RoomImgRepository extends JpaRepository<RoomImg, Long> {
 
     List<RoomImg> findByRoomIdOrderByIdAsc(Long roomId);
+
+    RoomImg findByRoomIdAndRepimgYn(Long roomId, String repimgYn);
 }

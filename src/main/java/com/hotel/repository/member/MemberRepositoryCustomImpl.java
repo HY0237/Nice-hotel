@@ -1,5 +1,6 @@
 package com.hotel.repository.member;
 
+import com.hotel.constant.Role;
 import com.hotel.constant.RoomType;
 import com.hotel.dto.QReservationMainDto;
 import com.hotel.dto.client.ClientDto;
@@ -78,7 +79,8 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
                                 member.role)
                 )
                 .from(member)
-                .where(regDtsAfter(clientSearchDto.getSearchDateType()),
+                .where(member.role.eq(Role.USER),
+                        regDtsAfter(clientSearchDto.getSearchDateType()),
                         searchByLike(clientSearchDto.getSearchBy(), clientSearchDto.getSearchQuery())
                         )
                 .orderBy(member.id.desc())

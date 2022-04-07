@@ -1,6 +1,7 @@
 package com.hotel.controller;
 
 
+import com.hotel.dto.reservation.ReservationDetailDto;
 import com.hotel.dto.reservation.ReservationDto;
 import com.hotel.dto.reservation.ReservationMainDto;
 import com.hotel.dto.reservation.ReservationSearchDto;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,7 +51,7 @@ public class ReservationController {
     @GetMapping(value = "/admin/reservation/detail/{reservationId}")
     public String reservationDtl(@PathVariable("reservationId") Long reservationId, Model model){
         try {
-            ReservationDto reservationDto = reservationService.getReservationDtl(reservationId);
+            ReservationDto reservationDto = reservationService.getAdminReservationDtl(reservationId);
             RoomFormDto roomFormDto = roomService.getRoomDtl(reservationDto.getRoomId());
             model.addAttribute("roomFormDto", roomFormDto);
             model.addAttribute("reservationDto", reservationDto);
@@ -74,7 +76,7 @@ public class ReservationController {
     }
 
 
-    //객실 예약 추가
+    //객실 예약 페이지
     @GetMapping(value = "/reservation/new/{roomId}")
     public String reservationRoom(ReservationDto reservationDto, Model model, @PathVariable("roomId") Long roomId){
 
@@ -107,6 +109,18 @@ public class ReservationController {
         }
 
         return new ResponseEntity<Long>(reservationId, HttpStatus.OK);
+    }
+
+    // 예약 내역 상세보기
+    @GetMapping(value = {"/reservation/detail", "/reservation/detail/{page}"} )
+    public String reservationHist(@PathVariable("page") Optional<Integer> page, Principal principal, Model model){
+        Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 2);
+        Page<ReservationDetailDto> reservationDetailDtoList = reservationService.getReservationHist(principal.getName(), pageable);
+        model.addAttribute("reservations", reservationDetailDtoList);
+        model.addAttribute("page", pageable.getPageNumber());
+        model.addAttribute("maxPage", 5);
+
+        return "reservation/reservationDetails";
     }
 
 

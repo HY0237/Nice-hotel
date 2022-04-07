@@ -55,32 +55,32 @@ class ReservationServiceTest {
         return memberRepository.save(member);
     }
 
-    @Test
-    @DisplayName("예약 테스트")
-    public void reservation(){
-        Room room = saveRoom();
-        Member member = saveMember();
-
-        ReservationDto reservationDto= new ReservationDto();
-        reservationDto.setCheckIn(LocalDate.now());
-        reservationDto.setCheckOut(LocalDate.now());
-        reservationDto.setPrice(1000);
-        reservationDto.setGuest(5);
-        reservationDto.setRoomId(room.getId());
-        reservationDto.setEmail("test@test.com");
-
-        Long reservationId = reservationService.reservation(reservationDto);
-
-        Reservation reservation = reservationRepository.findById(reservationId)
-                .orElseThrow(EntityNotFoundException::new);
-
-        assertEquals(member, reservation.getMember());
-        assertEquals(room, reservation.getRoom());
-        assertEquals(LocalDate.now(), reservation.getCheckIn());
-        assertEquals(LocalDate.now(), reservation.getCheckOut());
-        assertEquals(1000, reservation.getPrice());
-        assertEquals(5, reservation.getGuest());
-    }
+//    @Test
+//    @DisplayName("예약 테스트")
+//    public void reservation(){
+//        Room room = saveRoom();
+//        Member member = saveMember();
+//
+//        ReservationDto reservationDto= new ReservationDto();
+//        reservationDto.setCheckIn(LocalDate.now());
+//        reservationDto.setCheckOut(LocalDate.now());
+//        reservationDto.setPrice(1000);
+//        reservationDto.setGuest(5);
+//        reservationDto.setRoomId(room.getId());
+//        reservationDto.setEmail("test@test.com");
+//
+//        Long reservationId = reservationService.reservation(reservationDto);
+//
+//        Reservation reservation = reservationRepository.findById(reservationId)
+//                .orElseThrow(EntityNotFoundException::new);
+//
+//        assertEquals(member, reservation.getMember());
+//        assertEquals(room, reservation.getRoom());
+//        assertEquals(LocalDate.now(), reservation.getCheckIn());
+//        assertEquals(LocalDate.now(), reservation.getCheckOut());
+//        assertEquals(1000, reservation.getPrice());
+//        assertEquals(5, reservation.getGuest());
+//    }
 
 
 
