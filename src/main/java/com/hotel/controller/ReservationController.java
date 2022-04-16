@@ -36,7 +36,7 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
-    // (관리자) 예약 내역 보기
+    // (관리자) 예약 조회
     @GetMapping(value = {"/admin/reservations", "/admin/reservations/{page}"})
     public String reservation(ReservationSearchDto reservationSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
         Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 4);
@@ -63,8 +63,18 @@ public class ReservationController {
         return "reservation/reservationForm";
     }
 
+    // (관리자) 예약 삭제
+    @DeleteMapping(value= "/admin/reservation/delete/{reservationId}")
+    public @ResponseBody ResponseEntity cancelReservation(@PathVariable("reservationId") Long reservationId){
 
-    // (관리자) 예약 가능한 룸 검색
+        reservationService.deleteReservation(reservationId);
+
+        return new ResponseEntity<Long>(reservationId, HttpStatus.OK);
+
+    }
+
+
+    // (관리자) 예약 가능한 객실 조회
     @GetMapping(value ={ "/admin/reservation", "/admin/reservation/{page}"})
     public String reservation(RoomSearchDto roomSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
         Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 6);
@@ -76,7 +86,7 @@ public class ReservationController {
     }
 
 
-    //객실 예약 페이지
+    // (관리자 회원) 객실 예약 페이지
     @GetMapping(value = "/reservation/new/{roomId}")
     public String reservationRoom(ReservationDto reservationDto, Model model, @PathVariable("roomId") Long roomId){
 
@@ -86,7 +96,7 @@ public class ReservationController {
         return "reservation/reservationForm";
     }
 
-    //객실 예약 저장
+    // (관리자 회원) 객실 예약 하기
     @PostMapping(value= "/reservation/new")
     public @ResponseBody
     ResponseEntity reservationNew(@RequestBody @Valid ReservationDto reservationDto, BindingResult bindingResult){
@@ -111,7 +121,7 @@ public class ReservationController {
         return new ResponseEntity<Long>(reservationId, HttpStatus.OK);
     }
 
-    // 예약 내역 상세보기
+    // (회원) 예약 내역 상세보기
     @GetMapping(value = {"/reservation/detail", "/reservation/detail/{page}"} )
     public String reservationHist(@PathVariable("page") Optional<Integer> page, Principal principal, Model model){
         Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 2);
@@ -122,6 +132,20 @@ public class ReservationController {
 
         return "reservation/reservationDetails";
     }
+
+    // (회원) 예약 삭제
+    @DeleteMapping(value= "/reservation/delete/{reservationId}")
+    public @ResponseBody ResponseEntity cancelReservation(@PathVariable("reservationId") Long reservationId, Principal principal){
+
+        if(!reservationService.validateReservation(reservationId, principal.getName())){
+            return new ResponseEntity<String>("취소 권한이 없습니다", HttpStatus.FORBIDDEN);
+        }
+        reservationService.deleteReservation(reservationId);
+
+        return new ResponseEntity<Long>(reservationId, HttpStatus.OK);
+
+    }
+
 
 
 

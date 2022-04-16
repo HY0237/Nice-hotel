@@ -66,7 +66,7 @@
         <style>
 
         .my-5{
-            margin-top:20px;
+            margin-top:10px;
 
         }
 
@@ -92,7 +92,7 @@
             height:auto;
             width:50%;
         }
-    </style>
+        </style>
 
         <script th:inline="javascript">
             $(document).ready(function(){
@@ -115,6 +115,7 @@
             var price = $("#pricePerNight").val();
             var totalPrice = price*nights;
             $("#totalPrice").val(totalPrice);
+            $("#totalPriceH").html(totalPrice + '원');
             $("#nights").html(nights);
 
             }
@@ -180,19 +181,9 @@
 
                           <!-- Left Form -->
                           <div class="repImgDiv">
+
                             <!-- Room Type -->
-                            <div th:if="${roomFormDto.roomType == T(com.hotel.constant.RoomType).SINGLE}" class="badge badge-primary mgb-15">
-                              Single
-                            </div>
-                            <span th:if="${roomFormDto.roomType == T(com.hotel.constant.RoomType).DOUBLE}" class="badge badge-primary mgb-15">
-                              Double
-                            </span>
-                            <span th:if="${roomFormDto.roomType == T(com.hotel.constant.RoomType).QUEEN}" class="badge badge-primary mgb-15">
-                              Queen
-                            </span>
-                            <span th:if="${roomFormDto.roomType == T(com.hotel.constant.RoomType).SUITE}" class="badge badge-primary mgb-15">
-                              Suite
-                            </span>
+                            <span th:text="${roomFormDto.roomType}" ></span>
 
                             <!-- Room Name -->
                             <div class="h4" th:text="${roomFormDto.roomNm}"></div>
@@ -270,7 +261,8 @@
                               <!-- Total Price -->
                               <div class="text-right mgt-50">
                                 <h5>결제 금액</h5>
-                                <input type="number" name="totalPrice" id="totalPrice" th:field="${reservationDto.price}" readonly>원
+                                <h3 id="totalPriceH" class="font-weight-bold"></h3>
+                                <input type="hidden"  id="totalPrice" th:field="${reservationDto.price}" class="form-control">
                               </div>
 
 

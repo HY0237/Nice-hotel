@@ -3,8 +3,10 @@ package com.hotel.service;
 import com.hotel.dto.room.RoomFormDto;
 import com.hotel.dto.room.RoomImgDto;
 import com.hotel.dto.room.RoomSearchDto;
+import com.hotel.entity.Reservation;
 import com.hotel.entity.Room;
 import com.hotel.entity.RoomImg;
+import com.hotel.repository.reservation.ReservationRepository;
 import com.hotel.repository.room.RoomImgRepository;
 import com.hotel.repository.room.RoomRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +28,10 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final RoomImgService roomImgService;
     private final RoomImgRepository roomImgRepository;
+    private final ReservationRepository reservationRepository;
 
+
+    //객실 저장
     public Long saveRoom(RoomFormDto roomFormDto, List<MultipartFile> roomImgFileList) throws Exception{
 
         Room room = roomFormDto.createRoom();
@@ -46,7 +51,8 @@ public class RoomService {
         return room.getId();
     }
 
-    @Transactional(readOnly = true) //데이터를 읽어 오는 트랜잭션 읽기 전용
+    //객실 정보 조회
+    @Transactional(readOnly = true)
     public RoomFormDto getRoomDtl(Long roomId){
 
         List<RoomImg> roomImgList = roomImgRepository.findByRoomIdOrderByIdAsc(roomId);
@@ -63,6 +69,7 @@ public class RoomService {
 
     }
 
+    //객실 수정
     public Long updateRoom(RoomFormDto roomFormDto, List<MultipartFile> roomImgFileList) throws Exception{
         //상품 수정
         Room room = roomRepository.findById(roomFormDto.getId())
@@ -78,9 +85,28 @@ public class RoomService {
         return room.getId();
     }
 
+    //객실 조회
     @Transactional(readOnly=true)
     public Page<Room> getAdminRoomPage(RoomSearchDto roomSearchDto, Pageable pageable){
         return roomRepository.getAdminRoomPage(roomSearchDto, pageable);
+    }
+
+    //객실 삭제
+    public void deleteRoom(Long roomId){
+        Room room = roomRepository.findById(roomId).orElseThrow(EntityNotFoundException::new);
+
+        List<RoomImg> roomImgList = roomImgRepository.findByRoomIdOrderByIdAsc(roomId);
+        for(RoomImg roomImg: roomImgList){
+            roomImgRepository.delete(roomImg);
+        }
+
+        List<Reservation> reservationList = reservationRepository.findByRoomIdOrderByIdAsc(roomId);
+        for(Reservation reservation: reservationList){
+            reservationRepository.delete(reservation);
+        }
+
+
+        roomRepository.delete(room);
     }
 
 

@@ -23,7 +23,7 @@ public class ClientController {
 
     private final ClientService clientService;
 
-    // 객실 조히
+    // (관리자) 회원 조회
     @GetMapping(value = {"/admin/clients", "/admin/clients/{page}"})
     public String clientManage(ClientSearchDto clientSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
         Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 4);

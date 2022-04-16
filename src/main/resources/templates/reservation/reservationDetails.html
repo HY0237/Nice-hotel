@@ -72,133 +72,174 @@
             margin-bottom:100px;
         }
         .repImgDiv{
-            margin-right:25px;
+            margin-top:60px;
+            margin-right:30px;
             margin-left:15px;
             height:auto;
-            width:30%;
+            width:40%;
         }
         .repImg{
-            height:200px;
-            width:200px;
+            height:250px;
+            width:350px;
         }
         .card{
-            margin-left:20px;
+            margin: 0 auto;
             float: none;
-            width:750px;
-            height:100%;
-            padding:30px;
+            width:950px;
+            height:auto;
+            padding:25px;
             margin-bottom:20px;
         }
         .fs18{
             font-size:18px
         }
         .fs24{
-            font-size:24px
+            font-size:30px
+        }
+        .fs25{
+            font-size:30px
         }
         .wd50{
+            margin-top:15px;
+            margin-left:15px;
             height:auto;
-            width:60%;
+            width:50%;
         }
     </style>
 
-<!--        <script th:inline="javascript">-->
-<!--        function cancelOrder(orderId) {-->
-<!--            var token = $("meta[name='_csrf']").attr("content");-->
-<!--            var header = $("meta[name='_csrf_header']").attr("content");-->
+        <script th:inline="javascript">
 
-<!--            var url = "/order/" + orderId + "/cancel";-->
-<!--            var paramData = {-->
-<!--                orderId : orderId,-->
-<!--            };-->
+          function deleteReservation(reservationId){
+             var token = $("meta[name='_csrf']").attr("content");
+             var header = $("meta[name='_csrf_header']").attr("content");
 
-<!--            var param = JSON.stringify(paramData);-->
+             var url = "/reservation/delete/" + reservationId;
 
-<!--            $.ajax({-->
-<!--                url      : url,-->
-<!--                type     : "POST",-->
-<!--                contentType : "application/json",-->
-<!--                data     : param,-->
-<!--                beforeSend : function(xhr){-->
-<!--                    /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */-->
-<!--                    xhr.setRequestHeader(header, token);-->
-<!--                },-->
-<!--                dataType : "json",-->
-<!--                cache   : false,-->
-<!--                success  : function(result, status){-->
-<!--                    alert("주문이 취소 되었습니다.");-->
-<!--                    location.href='/orders/' + [[${page}]];-->
-<!--                },-->
-<!--                error : function(jqXHR, status, error){-->
-<!--                    if(jqXHR.status == '401'){-->
-<!--                        alert('로그인 후 이용해주세요');-->
-<!--                        location.href='/members/login';-->
-<!--                    } else{-->
-<!--                        alert(jqXHR.responseText);-->
-<!--                    }-->
-<!--                }-->
-<!--            });-->
-<!--        }-->
-<!--    </script>-->
+             $.ajax({
+                 url      : url,
+                 type     : "DELETE",
+                 beforeSend : function(xhr){
+                      /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
+                      xhr.setRequestHeader(header, token);
+                 },
+                 dataType : "json",
+                 cache   : false,
+                 success  : function(result, status){
+                    alert("에약이 취소 되었습니다.");
+                    location.href='/reservation/detail';
+                 },
+                 error : function(jqXHR, status, error){
+
+                 if(jqXHR.status == '401'){
+                    alert('로그인 후 이용해주세요');
+
+                    } else{
+                      alert(jqXHR.responseJSON.message);
+                    }
+
+                    }
+                 });
+             }
+
+        </script>
 
         <!-- ======= Reservation Form Main ======= -->
         <main id="main" class="main">
 
             <!-- Reservation title -->
             <div class="pagetitle">
-              <h1>Reservation Details</h1>
+              <span class="fs25 font-weight-bold">Reservation Details</span>
               <nav>
               </nav>
             </div>
 
-          <div th:each="reservation : ${reservations.getContent()}">
 
-            <div class="card">
-                <div class="d-flex">
-                    <div class="repImgDiv">
-                        <img th:src="${reservation.roomImgUri}" class = "rounded repImg" th:alt="${reservation.roomName}">
-                    </div>
-                    <div class="wd50 justify-content-center">
-                        <span th:text="${reservation.roomName}" class="fs24 font-weight-bold"></span>
-                        <div class="fs18 font-weight-light">
+            <!-- ======= Reservation Details ======= -->
+            <div th:each="reservation : ${reservations.getContent()}">
+
+                <div class="card">
+                    <div class="d-flex">
+
+                        <div class="repImgDiv">
+                            <img th:src="${reservation.roomImgUri}" class = "rounded repImg" th:alt="${reservation.roomName}">
+                        </div>
+
+                        <div class="wd50 justify-content-center">
+                            <span th:text="${reservation.roomName}" class="fs24 font-weight-bold"></span>
+
+                            <hr>
+
+                            <div class="fs18 font-weight-light mb-3">
                             Room Type : <span th:text="${reservation.roomType}"></span>
                         </div>
-                        <div class="fs18 font-weight-light">
+
+                            <div class="fs18 font-weight-light mb-3">
                             Date : <span th:text="${reservation.checkIn}"></span>
                             ~<span th:text="${reservation.checkOut}"></span>
                         </div>
-                        <div class="fs18 font-weight-light">
+
+                            <div class="fs18 font-weight-light mb-3">
                             Guest : <span th:text="${reservation.guest}"></span>
                         </div>
-                        <div class="fs18 font-weight-light">
+
+                            <div class="fs18 font-weight-light mb-3">
                             Booked by : <span th:text="${reservation.name}"></span>
                         </div>
-                        <div class="fs18 font-weight-light">
+
+                            <div class="fs18 font-weight-light mb-3">
                             Email : <span th:text="${reservation.email}"></span>
                         </div>
-                        <div class="fs18 font-weight-light">
+
+                            <div class="fs18 font-weight-light mb-3">
                             Reserved Date : <span th:text="${reservation.reservationDate}"></span>
                         </div>
-                        <div class=text-right mgt-50>
+
+                            <div class=text-right mgt-50>
                             <h5>Total Fee</h5>
                             <span th:text="${reservation.price} +' 원'" class="fs24 font-weight-bold"></span>
                         </div>
-                        <div class="ml-3">
+
+                            <div class="ml-3">
                             <th:block th:if="${not #strings.isEmpty(reservation.id)}">
-                                <button type="button" class="btn btn-outline-secondary" th:value="${reservation.id}" >Cancel Reservation</button>
+                                <button type="button" class="btn btn-outline-secondary" th:onclick="'javascript:deleteReservation(' + ${reservation.id} + ')'" >Cancel Reservation</button>
                             </th:block>
                             <th:block th:unless="${not #strings.isEmpty(reservation.id)}">
                                 <h4>(취소 완료)</h4>
                             </th:block>
                         </div>
+
+                        </div>
+
                     </div>
                 </div>
             </div>
 
+            <!-- ======= Reservation Paging ======= -->
+            <div th:with="start=${(reservations.number/maxPage)*maxPage + 1}, end=(${(reservations.totalPages == 0) ? 1 : (start + (maxPage - 1) < reservations.totalPages ? start + (maxPage - 1) : reservations.totalPages)})" >
+                <ul class="pagination justify-content-center">
 
-          </div>
+                    <li class="page-item" th:classappend="${reservations.number eq 0}?'disabled':''">
+                        <a th:href="@{'/reservation/detail/' + ${reservations.number-1}}" aria-label='Previous' class="page-link">
+                            <span aria-hidden='true'>Previous</span>
+                        </a>
+                    </li>
+
+                    <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${reservations.number eq page-1}?'active':''">
+                        <a th:href="@{'/reservation/detail/' + ${page-1}}" th:inline="text" class="page-link">[[${page}]]</a>
+                    </li>
+
+                    <li class="page-item" th:classappend="${reservations.number+1 ge reservations.totalPages}?'disabled':''">
+                        <a th:href="@{'/reservation/detail' + ${reservations.number+1}}" aria-label='Next' class="page-link">
+                            <span aria-hidden='true'>Next</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
 
 
-      </main>
+
+        </main>
 
         <!-- ======= Footer ======= -->
         <div th:replace="fragment/common :: footer"></div>

@@ -22,7 +22,7 @@ public class MainController {
 
     private final ReservationService reservationService;
 
-
+    // (관리자 회원) 예약 가능한 객실 조회
     @GetMapping(value = {"/", "/{page}"})
     public String home(RoomSearchDto roomSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
         Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 3);

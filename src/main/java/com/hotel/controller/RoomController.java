@@ -9,13 +9,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
@@ -29,14 +28,14 @@ public class RoomController {
 
     private final RoomService roomService;
 
-    // 객실 추가
+    // (관리자) 객실 추가 페이지
     @GetMapping(value = "/admin/room/new")
     public String roomForm(Model model){
         model.addAttribute("roomFormDto", new RoomFormDto());
         return "room/roomForm";
     }
 
-    // 객실 추가
+    // (관리자) 객실 추가
     @PostMapping(value = "/admin/room/new")
     public String roomNew(@Valid RoomFormDto roomFormDto, BindingResult bindingResult, Model model,
                           @RequestParam("roomImgFile") List<MultipartFile> roomImgFileList){
@@ -60,7 +59,7 @@ public class RoomController {
         return "redirect:/admin/rooms";
     }
 
-    // 객실 상세보기
+    // (관리자) 객실 상세보기
     @GetMapping(value = "/admin/room/{roomId}")
     public String roomDtl(@PathVariable("roomId") Long roomId, Model model){
 
@@ -76,7 +75,7 @@ public class RoomController {
         return "room/roomForm";
     }
 
-    // 객실 수정
+    // (관리자) 객실 수정
     @PostMapping(value = "/admin/room/{roomId}")
     public String roomUpdate(@Valid RoomFormDto roomFormDto, BindingResult bindingResult, Model model,
                              @RequestParam("roomImgFile") List<MultipartFile> roomImgFileList){
@@ -103,7 +102,7 @@ public class RoomController {
     }
 
 
-    // 객실 조히
+    // (관리자) 객실 조회
     @GetMapping(value = {"/admin/rooms", "/admin/rooms/{page}"})
     public String roomManage(RoomSearchDto roomSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
         Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 4);
@@ -113,6 +112,19 @@ public class RoomController {
         model.addAttribute("maxPage", 5);
         return "room/rooms";
     }
+
+    // (관리자) 예약 삭제
+    @DeleteMapping(value= "/admin/room/delete/{roomId}")
+    public @ResponseBody
+    ResponseEntity deleteRoom(@PathVariable("roomId") Long roomId){
+
+
+        roomService.deleteRoom(roomId);
+
+        return new ResponseEntity<Long>(roomId, HttpStatus.OK);
+
+    }
+
 
 
 }

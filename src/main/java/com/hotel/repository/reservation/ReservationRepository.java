@@ -22,4 +22,6 @@ public interface ReservationRepository  extends JpaRepository<Reservation, Long>
             "where r.member.email = :email ")
     Long countReservation(@Param("email") String email);
 
+    List<Reservation> findByRoomIdOrderByIdAsc(Long roomId);
+
 }
