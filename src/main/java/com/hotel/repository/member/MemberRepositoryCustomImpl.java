@@ -71,12 +71,7 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
 
         QueryResults<ClientDto> results = queryFactory
                 .select(
-                        new QClientDto(
-                                member.id,
-                                member.name,
-                                member.email,
-                                member.phoneNum,
-                                member.role)
+                        new QClientDto(member)
                 )
                 .from(member)
                 .where(member.role.eq(Role.USER),

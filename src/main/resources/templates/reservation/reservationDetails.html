@@ -4,8 +4,6 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <meta name="_csrf" th:content="${_csrf.token}"/>
-  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
   <title>Forms / Elements - NiceAdmin Bootstrap Template</title>
   <meta content="" name="description">
@@ -36,7 +34,7 @@
 
   <!-- Template Main CSS File -->
   <link href="/assets/css/style.css" rel="stylesheet">
-  <link href="/assets/css/card.css" rel="stylesheet">
+
 
 
   <!-- =======================================================
@@ -61,6 +59,32 @@
 
         <style>
 
+        .breadcr {
+          font-size: 14px;
+          font-family: "Nunito", sans-serif;
+          color: #899bbd;
+          font-weight: 600;
+          display: flex;
+          flex-wrap: wrap;
+          padding: 0 0;
+          margin-bottom: 1rem;
+          list-style: none;
+
+        }
+        .breadcr a {
+          color: #899bbd;
+          transition: 0.3s;
+        }
+        .breadcr a:hover {
+          color: #51678f;
+        }
+        .breadcr .breadcrumb-item::before {
+          color: #899bbd;
+        }
+        .breadcr .active {
+          color: #51678f;
+          font-weight: 600;
+        }
 
         .mgt-50{
             margin-top:20px;
@@ -148,8 +172,14 @@
 
             <!-- Reservation title -->
             <div class="pagetitle">
-              <span class="fs25 font-weight-bold">Reservation Details</span>
-            </div>
+                <h1>Reservation Details</h1>
+                <nav>
+                    <ol class="breadcr">
+                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                        <li class="breadcrumb-item active">Reservation</li>
+                    </ol>
+                </nav>
+            </div><!-- End Page Title -->
 
 
             <!-- ======= Reservation Details ======= -->
@@ -193,9 +223,9 @@
                         </div>
 
                             <div class=text-right mgt-50>
-                            <h5>Total Fee</h5>
-                            <span th:text="${reservation.price} +' 원'" class="fs24 font-weight-bold"></span>
-                        </div>
+                                <h5>Total Fee</h5>
+                                <span th:text="${reservation.price} +' 원'" class="fs24 font-weight-bold"></span>
+                            </div>
 
                             <div class="ml-3">
                             <th:block th:if="${not #strings.isEmpty(reservation.id)}">

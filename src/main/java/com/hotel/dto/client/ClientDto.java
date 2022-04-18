@@ -1,12 +1,11 @@
 package com.hotel.dto.client;
 
 import com.hotel.constant.Role;
+import com.hotel.entity.Member;
 import com.querydsl.core.annotations.QueryProjection;
-import com.querydsl.core.types.dsl.EnumPath;
-import com.querydsl.core.types.dsl.NumberPath;
-import com.querydsl.core.types.dsl.StringPath;
 import lombok.Getter;
 import lombok.Setter;
+import org.modelmapper.ModelMapper;
 
 @Getter
 @Setter
@@ -22,12 +21,16 @@ public class ClientDto {
 
     private Role role;
 
+    public ClientDto(){
+
+    }
+
     @QueryProjection
-    public ClientDto(Long id, String name, String email, String phoneNum, Role role) {
-        this.id = id;
-        this.name =name;
-        this.email = email;
-        this.phoneNum= phoneNum;
-        this.role = role;
+    public ClientDto(Member member) {
+        this.id = member.getId();
+        this.name = member.getName();
+        this.email = member.getEmail();
+        this.phoneNum= member.getPhoneNum();
+        this.role = member.getRole();
     }
 }

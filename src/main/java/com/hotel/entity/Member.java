@@ -3,6 +3,7 @@ package com.hotel.entity;
 
 import com.hotel.constant.Role;
 import com.hotel.dto.MemberFormDto;
+import com.hotel.dto.client.ClientDto;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -42,5 +43,11 @@ public class Member extends BaseEntity{
         member.setPassword(password);
         member.setRole(memberFormDto.getRole());
         return member;
+    }
+
+    public void updateClient(ClientDto clientDto){
+        this.name = clientDto.getName();
+        this.email =clientDto.getEmail();
+        this.phoneNum=clientDto.getPhoneNum();
     }
 }

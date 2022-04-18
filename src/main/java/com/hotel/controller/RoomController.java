@@ -59,7 +59,7 @@ public class RoomController {
         return "redirect:/admin/rooms";
     }
 
-    // (관리자) 객실 상세보기
+    // (관리자) 객실 정보 상세보기
     @GetMapping(value = "/admin/room/{roomId}")
     public String roomDtl(@PathVariable("roomId") Long roomId, Model model){
 
@@ -67,7 +67,7 @@ public class RoomController {
             RoomFormDto roomFormDto = roomService.getRoomDtl(roomId);
             model.addAttribute("roomFormDto", roomFormDto);
         }catch (EntityNotFoundException e){
-            model.addAttribute("errorMessage", "존재하지 않는 상품입니다");
+            model.addAttribute("errorMessage", "존재하지 않는 객실입니다");
             model.addAttribute("roomFormDto", new RoomFormDto());
             return "room/roomForm";
         }
@@ -75,7 +75,7 @@ public class RoomController {
         return "room/roomForm";
     }
 
-    // (관리자) 객실 수정
+    // (관리자) 객실 정보 수정
     @PostMapping(value = "/admin/room/{roomId}")
     public String roomUpdate(@Valid RoomFormDto roomFormDto, BindingResult bindingResult, Model model,
                              @RequestParam("roomImgFile") List<MultipartFile> roomImgFileList){
@@ -113,11 +113,10 @@ public class RoomController {
         return "room/rooms";
     }
 
-    // (관리자) 예약 삭제
+    // (관리자) 객실 삭제
     @DeleteMapping(value= "/admin/room/delete/{roomId}")
     public @ResponseBody
     ResponseEntity deleteRoom(@PathVariable("roomId") Long roomId){
-
 
         roomService.deleteRoom(roomId);
 

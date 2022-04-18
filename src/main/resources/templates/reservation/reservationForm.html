@@ -98,25 +98,25 @@
             $(document).ready(function(){
                 calculateTotalPrice();
 
-            $("#checkout").change( function(){
-                calculateTotalPrice();
-            });
+                $("#checkout").change( function(){
+                    calculateTotalPrice();
+                });
 
             });
 
             function calculateTotalPrice(){
 
-            var date1 = new Date($("#checkin").val());
-            var date2 = new Date($("#checkout").val());
+              var date1 = new Date($("#checkin").val());
+              var date2 = new Date($("#checkout").val());
 
-            var Difference_In_Time = date2.getTime() - date1.getTime();
-            var nights = Difference_In_Time / (1000 * 3600 * 24);
+              var Difference_In_Time = date2.getTime() - date1.getTime();
+              var nights = Difference_In_Time / (1000 * 3600 * 24);
 
-            var price = $("#pricePerNight").val();
-            var totalPrice = price*nights;
-            $("#totalPrice").val(totalPrice);
-            $("#totalPriceH").html(totalPrice + '원');
-            $("#nights").html(nights);
+              var price = $("#pricePerNight").val();
+              var totalPrice = price*nights;
+              $("#totalPrice").val(totalPrice);
+              $("#totalPriceH").html(totalPrice + '원');
+              $("#nights").html(nights);
 
             }
 
@@ -149,7 +149,7 @@
                   dataType : "json",
                   cache   : false,
                   success  : function(result, status){
-                      alert("에약이 완료 되었습니다.");
+                      alert("예약이 완료 되었습니다.");
                       location.href='/';
                   }
               });
