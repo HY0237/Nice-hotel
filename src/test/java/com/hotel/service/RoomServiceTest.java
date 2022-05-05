@@ -53,7 +53,7 @@ class RoomServiceTest {
     }
 
     @Test
-    @DisplayName("상품 등록 테스트")
+    @DisplayName("객실 등록 테스트")
     @WithMockUser(
             username = "admin",
             roles = {"ADMIN"}

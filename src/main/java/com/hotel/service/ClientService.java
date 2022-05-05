@@ -35,13 +35,22 @@ public class ClientService {
     private final ReservationRepository reservationRepository;
 
 
-    //회원 조회
+    /**
+     * 회원 조회
+     * @param clientSearchDto
+     * @param pageable
+     * @return
+     */
     @Transactional(readOnly=true)
     public Page<ClientDto> getReserveRoomPage(ClientSearchDto clientSearchDto, Pageable pageable){
         return memberRepository.getClientPage(clientSearchDto, pageable);
     }
 
-    //회원 정보 조회
+    /**
+     * 회원 정보 내역
+     * @param clientId
+     * @return
+     */
     @Transactional(readOnly = true)
     public ClientDto getClientDtl(Long clientId){
 
@@ -56,7 +65,12 @@ public class ClientService {
 
     }
 
-    //회원 수정
+    /** 회원 수정
+     *
+     * @param clientDto
+     * @return
+     * @throws Exception
+     */
     public Long updateClient(ClientDto clientDto) throws Exception{
 
         Member member = memberRepository.findById(clientDto.getId()).orElseThrow(EntityExistsException::new);
@@ -66,7 +80,12 @@ public class ClientService {
 
     }
 
-    //객실 삭제
+    /**
+     *
+     * 회원 삭제
+     *
+     * @param clientId
+     */
     public void deleteClient(Long clientId){
         Member member = memberRepository.findById(clientId).orElseThrow(EntityNotFoundException::new);
 

@@ -34,7 +34,7 @@ public class MainController {
 
     private final RoomService roomService;
 
-    // 예약 가능한 객실 조회
+    /* 예약 가능한 객실 조회 */
     @GetMapping(value = {"/", "/{page}"})
     public String home(RoomSearchDto roomSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
         Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 3);
@@ -45,7 +45,7 @@ public class MainController {
         return "index";
     }
 
-    // 객실 예약 페이지
+    /* 객실 예약 페이지 */
     @GetMapping(value = "/reservation/new/{roomId}")
     public String reservationRoom(ReservationDto reservationDto, Model model, @PathVariable("roomId") Long roomId){
 
@@ -95,7 +95,7 @@ public class MainController {
     // 예약 삭제
     @DeleteMapping(value= "/reservation/delete/{reservationId}")
     public @ResponseBody
-    ResponseEntity cancelReservation(@PathVariable("reservationId") Long reservationId, Principal principal){
+    ResponseEntity reservationCancel(@PathVariable("reservationId") Long reservationId, Principal principal){
 
         if(!reservationService.validateReservation(reservationId, principal.getName())){
             return new ResponseEntity<String>("취소 권한이 없습니다", HttpStatus.FORBIDDEN);

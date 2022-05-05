@@ -36,7 +36,7 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
-    // (관리자) 예약 조회
+    // (관리자) 예약 전체 조회
     @GetMapping(value = {"/admin/reservations", "/admin/reservations/{page}"})
     public String reservation(ReservationSearchDto reservationSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
         Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 4);
@@ -65,7 +65,7 @@ public class ReservationController {
 
     // (관리자) 예약 삭제
     @DeleteMapping(value= "/admin/reservation/delete/{reservationId}")
-    public @ResponseBody ResponseEntity cancelReservation(@PathVariable("reservationId") Long reservationId){
+    public @ResponseBody ResponseEntity reservationCancel(@PathVariable("reservationId") Long reservationId){
 
         reservationService.deleteReservation(reservationId);
 

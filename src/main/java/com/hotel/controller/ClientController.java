@@ -28,7 +28,13 @@ public class ClientController {
 
     private final ClientService clientService;
 
-    // (관리자) 회원 조회
+    /**
+     * (관리자) 회원 전체 조회
+     * @param clientSearchDto
+     * @param page
+     * @param model
+     * @return
+     */
     @GetMapping(value = {"/admin/clients", "/admin/clients/{page}"})
     public String clientManage(ClientSearchDto clientSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
         Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 4);
@@ -39,7 +45,12 @@ public class ClientController {
         return "client/clients";
     }
 
-    // (관리자) 회원 정보 상세보기
+    /**
+     * (관리자) 회원 정보 상세보기
+     * @param clientId
+     * @param model
+     * @return
+     */
     @GetMapping(value = "/admin/client/{clientId}")
     public String clientDtl(@PathVariable("clientId") Long clientId, Model model){
 
@@ -54,7 +65,13 @@ public class ClientController {
         return "client/clientForm";
     }
 
-    // (관리자) 회원 정보 수정
+    /**
+     * (관리자) 회원 정보 수정
+     * @param clientDto
+     * @param bindingResult
+     * @param model
+     * @return
+     */
     @PostMapping(value = "/admin/client/{clientId}")
     public String clientUpdate(@Valid ClientDto clientDto, BindingResult bindingResult, Model model){
 
@@ -72,9 +89,13 @@ public class ClientController {
         return "redirect:/admin/clients";
     }
 
-    // (관리자) 회원 삭제
+    /** (관리자) 회원 삭제
+     *
+     * @param clientId
+     * @return
+     */
     @DeleteMapping(value= "/admin/client/delete/{clientId}")
-    public @ResponseBody ResponseEntity deleteRoom(@PathVariable("clientId") Long clientId){
+    public @ResponseBody ResponseEntity clientDelete(@PathVariable("clientId") Long clientId){
 
         clientService.deleteClient(clientId);
 

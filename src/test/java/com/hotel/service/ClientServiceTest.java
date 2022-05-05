@@ -4,9 +4,14 @@ import com.hotel.constant.Role;
 import com.hotel.dto.MemberFormDto;
 import com.hotel.dto.client.ClientDto;
 import com.hotel.entity.Member;
+import com.hotel.entity.Reservation;
 import com.hotel.repository.member.MemberRepository;
+import com.hotel.repository.reservation.ReservationRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +19,9 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 @Transactional
@@ -26,6 +34,11 @@ class ClientServiceTest {
     @Autowired
     MemberService memberService;
 
+    @Mock
+    MemberRepository memberRepository;
+
+    @Mock
+    ReservationRepository reservationRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -69,5 +82,19 @@ class ClientServiceTest {
         assertEquals(clientDto.getPhoneNum(), new_clientDto.getPhoneNum());
         assertEquals(clientDto.getRole(), new_clientDto.getRole());
     }
+
+    @Test
+    @DisplayName("회원 삭제 테스트")
+    public void clientDeleteTest() throws Exception {
+        Member member = createMember();
+        Member savedMember = memberService.saveMember(member);
+        clientService.deleteClient(savedMember.getId());
+        assertEquals(memberRepository.count(), 0);
+
+
+    }
+
+
+
 
 }
