@@ -39,19 +39,19 @@ class MemberRepositoryTest {
         }
     }
 
-    /**
-     * page:0 일때 member name: test10~test7
-     * page:1 일때 member name: test6~test3
-     * page:2 일때 member name: test3~test1
-     */
     @Test
-    @DisplayName("회원 조회 테스트")
-    public void findByEmailTest(){
+    @DisplayName("회원 페이지 조회 테스트")
+    public void findAllClients_Test(){
         this.createMemberList();
+
+        /**
+         * page:0 일때 member name: test10~test7
+         * page:1 일때 member name: test6~test3
+         * page:2 일때 member name: test3~test1
+         */
         Pageable pageable = PageRequest.of( 1, 4);
         ClientSearchDto clientSearchDto = new ClientSearchDto();
         Page<ClientDto> result = memberRepository.getClientPage(clientSearchDto, pageable);
-
 
         System.out.println("Page Size: " + result.getSize());
         System.out.println("Total Page: " + result.getTotalPages());

@@ -37,9 +37,6 @@ class ClientServiceTest {
     @Mock
     MemberRepository memberRepository;
 
-    @Mock
-    ReservationRepository reservationRepository;
-
     @Autowired
     PasswordEncoder passwordEncoder;
 

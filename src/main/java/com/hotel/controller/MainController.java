@@ -34,20 +34,33 @@ public class MainController {
 
     private final RoomService roomService;
 
-    /* 예약 가능한 객실 조회 */
+    /**
+     * 예약 가능한 객실 조회
+     * @param roomSearchDto
+     * @param page
+     * @param model
+     * @return
+     */
     @GetMapping(value = {"/", "/{page}"})
-    public String home(RoomSearchDto roomSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
+    public String reservationAvailable(RoomSearchDto roomSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
         Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 3);
-        Page<ReservationMainDto> rooms = reservationService.getReserveRoomPage(roomSearchDto, pageable);
+        Page<ReservationMainDto> rooms = roomService.getReserveRoomPage(roomSearchDto, pageable);
         model.addAttribute("rooms", rooms);
         model.addAttribute("roomSearchDto", roomSearchDto);
         model.addAttribute("maxPage", 5);
         return "index";
     }
 
-    /* 객실 예약 페이지 */
+
+    /**
+     * 객실 예약 페이지
+     * @param reservationDto
+     * @param model
+     * @param roomId
+     * @return
+     */
     @GetMapping(value = "/reservation/new/{roomId}")
-    public String reservationRoom(ReservationDto reservationDto, Model model, @PathVariable("roomId") Long roomId){
+    public String reservationForm(ReservationDto reservationDto, Model model, @PathVariable("roomId") Long roomId){
 
         RoomFormDto roomFormDto = roomService.getRoomDtl(roomId);
         model.addAttribute("roomFormDto", roomFormDto);
@@ -55,7 +68,12 @@ public class MainController {
         return "reservation/reservationForm";
     }
 
-    // 객실 예약 하기
+    /**
+     * 객실 예약 하기
+     * @param reservationDto
+     * @param bindingResult
+     * @return
+     */
     @PostMapping(value= "/reservation/new")
     public @ResponseBody
     ResponseEntity reservationNew(@RequestBody @Valid ReservationDto reservationDto, BindingResult bindingResult){
@@ -80,7 +98,13 @@ public class MainController {
         return new ResponseEntity<Long>(reservationId, HttpStatus.OK);
     }
 
-    // 예약 내역 상세보기
+    /**
+     * 예약 내역 상세보기
+     * @param page
+     * @param principal
+     * @param model
+     * @return
+     */
     @GetMapping(value = {"/reservation/detail", "/reservation/detail/{page}"} )
     public String reservationHist(@PathVariable("page") Optional<Integer> page, Principal principal, Model model){
         Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 2);
@@ -92,7 +116,13 @@ public class MainController {
         return "reservation/reservationDetails";
     }
 
-    // 예약 삭제
+
+    /**
+     * 예약 삭제
+     * @param reservationId
+     * @param principal
+     * @return
+     */
     @DeleteMapping(value= "/reservation/delete/{reservationId}")
     public @ResponseBody
     ResponseEntity reservationCancel(@PathVariable("reservationId") Long reservationId, Principal principal){

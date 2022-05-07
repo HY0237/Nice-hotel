@@ -36,9 +36,9 @@ public class ClientController {
      * @return
      */
     @GetMapping(value = {"/admin/clients", "/admin/clients/{page}"})
-    public String clientManage(ClientSearchDto clientSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
+    public String clientAll(ClientSearchDto clientSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
         Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 4);
-        Page<ClientDto> clients = clientService.getReserveRoomPage(clientSearchDto, pageable);
+        Page<ClientDto> clients = clientService.getClientPage(clientSearchDto, pageable);
         model.addAttribute("clients", clients);
         model.addAttribute("clientSearchDto", clientSearchDto);
         model.addAttribute("maxPage", 5);

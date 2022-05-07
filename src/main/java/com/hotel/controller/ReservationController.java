@@ -1,12 +1,8 @@
 package com.hotel.controller;
 
-
-import com.hotel.dto.reservation.ReservationDetailDto;
 import com.hotel.dto.reservation.ReservationDto;
-import com.hotel.dto.reservation.ReservationMainDto;
 import com.hotel.dto.reservation.ReservationSearchDto;
 import com.hotel.dto.room.RoomFormDto;
-import com.hotel.dto.room.RoomSearchDto;
 import com.hotel.entity.Reservation;
 import com.hotel.service.ReservationService;
 import com.hotel.service.RoomService;
@@ -18,14 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-
 import javax.persistence.EntityNotFoundException;
-import javax.validation.Valid;
-import java.security.Principal;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -36,9 +26,15 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
-    // (관리자) 예약 전체 조회
+    /**
+     * (관리자) 예약 전체 조회
+     * @param reservationSearchDto
+     * @param page
+     * @param model
+     * @return
+     */
     @GetMapping(value = {"/admin/reservations", "/admin/reservations/{page}"})
-    public String reservation(ReservationSearchDto reservationSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
+    public String reservationAll(ReservationSearchDto reservationSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
         Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 4);
         Page<Reservation> reservations = reservationService.getAdminReserPage(reservationSearchDto, pageable);
         model.addAttribute("reservations", reservations);
@@ -47,7 +43,12 @@ public class ReservationController {
         return "reservation/reservations";
     }
 
-    // (관리자) 예약 내역 상세보기
+    /**
+     * (관리자) 예약 내역 상세보기
+     * @param reservationId
+     * @param model
+     * @return
+     */
     @GetMapping(value = "/admin/reservation/detail/{reservationId}")
     public String reservationDtl(@PathVariable("reservationId") Long reservationId, Model model){
         try {
@@ -63,7 +64,11 @@ public class ReservationController {
         return "reservation/reservationForm";
     }
 
-    // (관리자) 예약 삭제
+    /**
+     * (관리자) 예약 삭제
+     * @param reservationId
+     * @return
+     */
     @DeleteMapping(value= "/admin/reservation/delete/{reservationId}")
     public @ResponseBody ResponseEntity reservationCancel(@PathVariable("reservationId") Long reservationId){
 

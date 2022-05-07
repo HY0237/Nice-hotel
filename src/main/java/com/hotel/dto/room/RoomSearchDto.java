@@ -18,8 +18,6 @@ public class RoomSearchDto {
 
     private RoomType searchRoomType;
 
-//    private String searchByPrice; //가격이 높은 순 가격이 낮은순
-
     private String searchQuery = ""; // 룸 이름
 
     private Integer searchAdults;

@@ -42,7 +42,7 @@ public class ClientService {
      * @return
      */
     @Transactional(readOnly=true)
-    public Page<ClientDto> getReserveRoomPage(ClientSearchDto clientSearchDto, Pageable pageable){
+    public Page<ClientDto> getClientPage(ClientSearchDto clientSearchDto, Pageable pageable){
         return memberRepository.getClientPage(clientSearchDto, pageable);
     }
 
@@ -89,7 +89,7 @@ public class ClientService {
     public void deleteClient(Long clientId){
         Member member = memberRepository.findById(clientId).orElseThrow(EntityNotFoundException::new);
 
-        List<Reservation> reservationList = reservationRepository.findByRoomIdOrderByIdAsc(clientId);
+        List<Reservation> reservationList = reservationRepository.findByMemberIdOrderByIdAsc(clientId);
         for(Reservation reservation: reservationList){
             reservationRepository.delete(reservation);
         }

@@ -31,12 +31,20 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
     }
 
 
-    //객실 타입 옵션
+    /**
+     * 객실 타입 옵션
+     * @param searchRoomType
+     * @return
+     */
     private BooleanExpression searchRoomByType(RoomType searchRoomType){
         return searchRoomType == null ? null : QRoom.room.roomType.eq(searchRoomType);
     }
 
-    //시간별 옵션
+    /**
+     * 수정 기간 옵션
+     * @param searchDateType
+     * @return
+     */
     private BooleanExpression regDtsAfter(String searchDateType){
         LocalDateTime dateTime = LocalDateTime.now();
 
@@ -58,13 +66,22 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
         return QRoom.room.regTime.after(dateTime);
     }
 
-    //룸 이름
+    /**
+     * 객실 이름 옵션
+     * @param searchQuery
+     * @return
+     */
     private BooleanExpression searchRoomByName(String searchQuery){
 
         return StringUtils.isEmpty(searchQuery) ? null : QRoom.room.roomNm.like("%" + searchQuery + "%");
     }
 
-    //게스트 인원수 옵션
+
+    /**
+     * 게스트 인원 수 옵션
+     * @param guest
+     * @return
+     */
     private BooleanExpression searchMaxGuest(Integer guest){
 
         if(guest == null){
@@ -75,7 +92,12 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
     }
 
 
-    // 체크인 체크아웃 옵션
+    /**
+     * 체크인 체크아웃 날짜 옵션
+     * @param checkIn
+     * @param checkOut
+     * @return
+     */
     private BooleanExpression searchDate(LocalDate checkIn, LocalDate checkOut){
 
 
@@ -107,7 +129,13 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
         return case1.or(case2).or(case3);
     }
 
-    // 날짜 룸 타입 이름을 통헤 객실 조회
+
+    /**
+     * 기간, 객실 타입, 객실 이음 옵션으로 객실 조회
+     * @param roomSearchDto
+     * @param pageable
+     * @return
+     */
     @Override
     public Page<Room> getAdminRoomPage(RoomSearchDto roomSearchDto, Pageable pageable) {
 
@@ -128,7 +156,13 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
     }
 
 
-    //날짜 사람 방이름을 통해 예약 가능한 객실 조회
+
+    /**
+     * 날짜, 게스트 수, 객실 이름 옵션으로 예약 가능한 객실 조회
+     * @param roomSearchDto
+     * @param pageable
+     * @return
+     */
     @Override
     public Page<ReservationMainDto> getReserveRoomPage(RoomSearchDto roomSearchDto, Pageable pageable) {
         QRoom room = QRoom.room;
@@ -151,10 +185,10 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
                         JPAExpressions
                                 .select(reservation.room().id)
                                 .from(reservation)
-                                .where(searchDate(roomSearchDto.getSearchCheckIn(), roomSearchDto.getSearchCheckOut()))
-                ), roomImg.repimgYn.eq("Y"),
-                        searchRoomByName(roomSearchDto.getSearchQuery()),
-                        searchMaxGuest(roomSearchDto.getSearchAdults()))
+                                .where(searchDate(roomSearchDto.getSearchCheckIn(), roomSearchDto.getSearchCheckOut()))),
+                                        roomImg.repimgYn.eq("Y"),
+                                        searchRoomByName(roomSearchDto.getSearchQuery()),
+                                        searchMaxGuest(roomSearchDto.getSearchAdults()))
                 .orderBy(room.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())

@@ -22,6 +22,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @SpringBootTest
 @Transactional
 @TestPropertySource(locations = {"classpath:application-test.properties"})
@@ -36,9 +37,6 @@ class RoomServiceTest {
     @Autowired
     RoomImgRepository roomImgRepository;
 
-    RoomServiceTest() {
-    }
-
     List<MultipartFile> createMultipartFiles() throws Exception {
         List<MultipartFile> multipartFileList = new ArrayList();
 
@@ -52,17 +50,29 @@ class RoomServiceTest {
         return multipartFileList;
     }
 
+    public void createRoomList() throws Exception {
+
+        for(int i = 1; i <= 10; i++) {
+            RoomFormDto roomFormDto = new RoomFormDto();
+            roomFormDto.setRoomNm("테스트 객실"+i);
+            roomFormDto.setRoomType(RoomType.SINGLE);
+            roomFormDto.setRoomDetail("테스트 객실 입니다");
+            roomFormDto.setPricePerNight(1000*i);
+            roomFormDto.setMaxPeople(i);
+            List<MultipartFile> multipartFileList = this.createMultipartFiles();
+            roomService.saveRoom(roomFormDto, multipartFileList);
+        }
+
+    }
+
     @Test
     @DisplayName("객실 등록 테스트")
-    @WithMockUser(
-            username = "admin",
-            roles = {"ADMIN"}
-    )
-    void saveItem() throws Exception {
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    public void saveRoom() throws Exception {
         RoomFormDto roomFormDto = new RoomFormDto();
-        roomFormDto.setRoomNm("테스트 상품");
+        roomFormDto.setRoomNm("테스트 객실");
         roomFormDto.setRoomType(RoomType.SINGLE);
-        roomFormDto.setRoomDetail("테스트 상품 입니다");
+        roomFormDto.setRoomDetail("테스트 객실 입니다");
         roomFormDto.setPricePerNight(1000);
         roomFormDto.setMaxPeople(100);
         List<MultipartFile> multipartFileList = this.createMultipartFiles();
@@ -76,5 +86,57 @@ class RoomServiceTest {
         Assertions.assertEquals(roomFormDto.getMaxPeople(), room.getMaxPeople());
         Assertions.assertEquals(((MultipartFile)multipartFileList.get(0)).getOriginalFilename(), ((RoomImg)roomImgList.get(0)).getOriImgName());
     }
+
+    @Test
+    @DisplayName("객실 정보 상세보기 테스트")
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    public void detailRoom() throws Exception {
+        this.createRoomList();
+        RoomFormDto roomFormDto = roomService.getRoomDtl(1L);
+        Assertions.assertEquals(roomFormDto.getRoomNm(), "테스트 객실1");
+        Assertions.assertEquals(roomFormDto.getRoomType(), RoomType.SINGLE);
+        Assertions.assertEquals(roomFormDto.getRoomDetail(), "테스트 객실 입니다");
+        Assertions.assertEquals(roomFormDto.getPricePerNight(), 1000);
+        Assertions.assertEquals(roomFormDto.getMaxPeople(), 1);
+        Assertions.assertFalse(roomFormDto.getRoomImgDtoList().isEmpty());
+    }
+
+    @Test
+    @DisplayName("객실 수정 테스트")
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    public void updateRoom() throws Exception {
+        this.createRoomList();
+        RoomFormDto roomFormDto = new RoomFormDto();
+        roomFormDto.setId(1L);
+        roomFormDto.setRoomNm("테스트 객실");
+        roomFormDto.setRoomType(RoomType.DOUBLE);
+        roomFormDto.setRoomDetail("테스트 객실 입니다");
+        roomFormDto.setPricePerNight(1000);
+        roomFormDto.setMaxPeople(100);
+        roomFormDto.setRoomImgIds(List.of(2L, 3L, 4L, 5L, 6L));
+        List<MultipartFile> multipartFileList = this.createMultipartFiles();
+        Long roomId = this.roomService.updateRoom(roomFormDto, multipartFileList);
+        List<RoomImg> roomImgList = this.roomImgRepository.findByRoomIdOrderByIdAsc(roomId);
+        Room room = (Room)this.roomRepository.findById(roomId).orElseThrow(EntityNotFoundException::new);
+        Assertions.assertEquals(roomFormDto.getRoomNm(), room.getRoomNm());
+        Assertions.assertEquals(roomFormDto.getRoomType(), room.getRoomType());
+        Assertions.assertEquals(roomFormDto.getRoomDetail(), room.getRoomDetail());
+        Assertions.assertEquals(roomFormDto.getPricePerNight(), room.getPricePerNight());
+        Assertions.assertEquals(roomFormDto.getMaxPeople(), room.getMaxPeople());
+        Assertions.assertEquals(((MultipartFile)multipartFileList.get(0)).getOriginalFilename(), ((RoomImg)roomImgList.get(0)).getOriImgName());
+    }
+
+    @Test
+    @DisplayName("객실 삭제 테스트")
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    public void deleteRoom() throws Exception {
+        this.createRoomList();
+        roomService.deleteRoom(1L);
+
+        org.assertj.core.api.Assertions.assertThat(roomRepository.findById(1L).isEmpty());
+    }
+
+
+
 
 }

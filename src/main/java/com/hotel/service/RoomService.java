@@ -1,5 +1,6 @@
 package com.hotel.service;
 
+import com.hotel.dto.reservation.ReservationMainDto;
 import com.hotel.dto.room.RoomFormDto;
 import com.hotel.dto.room.RoomImgDto;
 import com.hotel.dto.room.RoomSearchDto;
@@ -31,7 +32,13 @@ public class RoomService {
     private final ReservationRepository reservationRepository;
 
 
-    //객실 저장
+    /**
+     * 객실 등록
+     * @param roomFormDto
+     * @param roomImgFileList
+     * @return
+     * @throws Exception
+     */
     public Long saveRoom(RoomFormDto roomFormDto, List<MultipartFile> roomImgFileList) throws Exception{
 
         Room room = roomFormDto.createRoom();
@@ -51,7 +58,23 @@ public class RoomService {
         return room.getId();
     }
 
-    //객실 정보 조회
+    /**
+     * 객실 조회
+     * @param roomSearchDto
+     * @param pageable
+     * @return
+     */
+    @Transactional(readOnly=true)
+    public Page<Room> getAdminRoomPage(RoomSearchDto roomSearchDto, Pageable pageable){
+        return roomRepository.getAdminRoomPage(roomSearchDto, pageable);
+    }
+
+    /**
+     * 객실 정보 상세보기
+     *
+     * @param roomId
+     * @return
+     */
     @Transactional(readOnly = true)
     public RoomFormDto getRoomDtl(Long roomId){
 
@@ -69,15 +92,21 @@ public class RoomService {
 
     }
 
-    //객실 수정
+    /**
+     * 객실 수정
+     * @param roomFormDto
+     * @param roomImgFileList
+     * @return
+     * @throws Exception
+     */
     public Long updateRoom(RoomFormDto roomFormDto, List<MultipartFile> roomImgFileList) throws Exception{
-        //상품 수정
+        //객실 수정
         Room room = roomRepository.findById(roomFormDto.getId())
                 .orElseThrow(EntityNotFoundException::new);
         room.updateRoom(roomFormDto);
         List<Long> roomImgIds = roomFormDto.getRoomImgIds();
 
-        //이미지 등록
+        //객실 이미지 수젇
         for(int i=0; i < roomImgFileList.size(); i++){
             roomImgService.updateRoomImg(roomImgIds.get(i), roomImgFileList.get(i));
         }
@@ -85,13 +114,11 @@ public class RoomService {
         return room.getId();
     }
 
-    //객실 조회
-    @Transactional(readOnly=true)
-    public Page<Room> getAdminRoomPage(RoomSearchDto roomSearchDto, Pageable pageable){
-        return roomRepository.getAdminRoomPage(roomSearchDto, pageable);
-    }
 
-    //객실 삭제
+    /**
+     * 객실 삭제
+     * @param roomId
+     */
     public void deleteRoom(Long roomId){
         Room room = roomRepository.findById(roomId).orElseThrow(EntityNotFoundException::new);
 
@@ -107,6 +134,17 @@ public class RoomService {
 
 
         roomRepository.delete(room);
+    }
+
+    /**
+     * (관리자 회원) 예약 가능한 객실 조회
+     * @param roomSearchDto
+     * @param pageable
+     * @return
+     */
+    @Transactional(readOnly=true)
+    public Page<ReservationMainDto> getReserveRoomPage(RoomSearchDto roomSearchDto, Pageable pageable){
+        return roomRepository.getReserveRoomPage(roomSearchDto, pageable);
     }
 
 

@@ -37,13 +37,31 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
 
 
-    // (관리자 회원) 예약 가능한 객실 조회
-    @Transactional(readOnly=true)
-    public Page<ReservationMainDto> getReserveRoomPage(RoomSearchDto roomSearchDto, Pageable pageable){
-        return roomRepository.getReserveRoomPage(roomSearchDto, pageable);
+    /**
+     * 예약자와 회원이 같은지 검증
+     * @param reservationId
+     * @param email
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public boolean validateReservation(Long reservationId, String email){
+        Member member = memberRepository.findByEmail(email);
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(EntityNotFoundException::new);
+        Member savedMember = reservation.getMember();
+
+        if(!StringUtils.equals(savedMember.getEmail(), member.getEmail())){
+            return false;
+        }
+
+        return true;
+
     }
 
-    // (관리자 회원) 객실 예약 하기
+    /**
+     * 객실 예약 하기
+     * @param reservationDto
+     * @return
+     */
     public Long reservation(ReservationDto reservationDto){
         Room room = roomRepository.findById(reservationDto.getRoomId())
                 .orElseThrow(EntityNotFoundException::new);
@@ -63,7 +81,12 @@ public class ReservationService {
 
     }
 
-    //(회원) 예약 확인
+    /**
+     * 예약 상세 보기
+     * @param email
+     * @param pageable
+     * @return
+     */
     @Transactional(readOnly = true)
     public Page<ReservationDetailDto> getReservationHist(String email, Pageable pageable){
 
@@ -80,13 +103,34 @@ public class ReservationService {
         return new PageImpl<ReservationDetailDto>(reservationDetailDtos, pageable, total);
     }
 
-    // (관리자) 예약 조회
+
+    /**
+     * (관리자 회원) 예약 취소
+     * @param reservationId
+     */
+    public void deleteReservation(Long reservationId){
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(EntityNotFoundException::new);
+        reservationRepository.delete(reservation);
+
+    }
+
+
+    /**
+     * (관리자) 예약 조회
+     * @param reservationSearchDto
+     * @param pageable
+     * @return
+     */
     @Transactional(readOnly=true)
     public Page<Reservation> getAdminReserPage(ReservationSearchDto reservationSearchDto, Pageable pageable){
         return reservationRepository.getAdminReserPage(reservationSearchDto, pageable);
     }
 
-    // (관리자) 예약 내역들 상세보기
+    /**
+     * (관리자) 예약 내역들 상세보기
+     * @param reservationId
+     * @return
+     */
     @Transactional(readOnly = true)
     public ReservationDto getAdminReservationDtl(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
@@ -97,27 +141,8 @@ public class ReservationService {
         return reservationDto;
     }
 
-    // 예약자와 회원이 같은지 검증
-    @Transactional(readOnly = true)
-    public boolean validateReservation(Long reservationId, String email){
-        Member member = memberRepository.findByEmail(email);
-        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(EntityNotFoundException::new);
-        Member savedMember = reservation.getMember();
 
-        if(!StringUtils.equals(savedMember.getEmail(), member.getEmail())){
-            return false;
-        }
 
-        return true;
-
-    }
-
-    // 예약삭제
-    public void deleteReservation(Long reservationId){
-        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(EntityNotFoundException::new);
-        reservationRepository.delete(reservation);
-
-    }
 
 
 
