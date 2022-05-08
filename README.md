@@ -376,6 +376,14 @@
                         .andExpect(status().isOk());
         }
        ```
+       
+   
+  - 🔑 총 54개의 Test Case를 작성했습니다. (Domain : 6 / Repository : 10 / Service : 14 / Controller : 24)
+    
+  ## References
+   - 백견불여일타 스프링부트 쇼핑몰 프로젝트 with JPA
+   - 스프링 부트와 AWS로 혼자 구현하는 웹 서비스
+   - Nice Admin -Free bootstrap admin HTML template
  
 
  
