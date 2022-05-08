@@ -401,6 +401,12 @@
    - 백견불여일타 스프링부트 쇼핑몰 프로젝트 with JPA
    - 스프링 부트와 AWS로 혼자 구현하는 웹 서비스
    - Nice Admin -Free bootstrap admin HTML template
+  
+ ## 프로젝트에 추가할 기능
+   - OAuth + JWT 구글 페이스북 로그인 기능 넣기
+   - spring batch로 하루 전 예약 알림 기능 넣기
+   - Jenkins와 Codedeploy로  CI/CD 구현하기
+   - AWS에 무중단 배포 하기
  
 
  
