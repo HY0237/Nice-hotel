@@ -2,7 +2,7 @@
 
 ## ❔ 프로젝트 계기
 이 프로젝트를 시작한 계기는 웹 프로그래밍의 기본 기술인 서버 프레임워크, 웹 언어 그리고 ORM등의 개념을 공부하고 
-각 기술들이 어떻게 유기적으로 연결이 되는지 이해하고 싶어 만들어 보게 되었습니다.
+각 기술들이 어떻게 유기적으로 연결이 되는지 이해하고 싶어 만들어 보게 되었습니다. 그리고 여러 숙박 예약 사이트에서 호텔과 객실을 검색하는 기능을 보고 이에 관한 데이터 쿼리도 한번 만들어보고 싶은 마음도 있었습니다. 
 
 ## 🙋‍♀️ 프로젝트 소개
 간단한 호텔 객실 예약 및 관리 시스템입니다. 일반인 회원과 관리자에 따라 객실 예약, 조회, 관리등을 할 수 있습니다.
@@ -30,6 +30,10 @@
   - Devtools 2.6.4
   - Modelmapper 2.3.9
   - JUnit 4.13.2
+ - ### Front-end
+  - html
+  - css
+  - jquery
  ## 🛠 구조 및 설계
  ### DB 설계
  ![nice_hotel_ERD](https://user-images.githubusercontent.com/68864993/165909386-eb711ca0-0117-46fa-ba9c-50a610f8a9e4.JPG)
@@ -313,6 +317,80 @@
                 return modelMapper.map(room, RoomFormDto.class);
             }
        ```
+       
+ ## JQuery
+   > HTML 문서의 이벤트 처리를 위해 사용하고 Ajax 메소드를 통해 데이터를 서버로 보낼 수 있었습니다.
+   
+   - Jquery로 페이지 처리 함수를 구현해 보았습니다.
+       ```
+       function page(page){
+                  var searchQuery = $("#searchQuery").val();
+                  var checkIn = $("#checkIn").val();
+                  var checkOut = $("#checkOut").val();
+                  var guest = $("#searchAdults").val();
+    
+                  location.href="/" + page
+                  + "?searchQuery=" + searchQuery
+                  + "&searchCheckIn=" + checkIn
+                  + "&searchCheckOut=" + checkOut
+                  + "&searchAdults=" + guest;
+              }
+       ```
+   - Post Ajax로 예약 함수를 구현해 보았습니다.
+       ```
+       function reservation(){
+              var token = $("meta[name='_csrf']").attr("content");
+              var header = $("meta[name='_csrf_header']").attr("content");
+
+              var url = "/reservation/new";
+              var paramData = {
+                  checkIn : $("#checkin").val(),
+                  checkOut : $("#checkout").val(),
+                  price : $("#totalPrice").val(),
+                  guest : $("#guests").val(),
+                  roomId : $("#roomId").val(),
+                  name : $("#name").val(),
+                  email : $("#email").val()
+              };
+
+              var param = JSON.stringify(paramData);
+
+              $.ajax({
+                  url      : url,
+                  type     : "POST",
+                  contentType : "application/json",
+                  data     : param,
+                  beforeSend : function(xhr){
+                      /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
+                      xhr.setRequestHeader(header, token);
+                  },
+                  dataType : "json",
+                  cache   : false,
+                  success  : function(result, status){
+                      alert("예약이 완료 되었습니다.");
+                      location.href='/';
+                  }
+              });
+            }
+       ```
+- 숙박 기간에 따른 총 결제 금액 함수를 구현해 보았습니다.
+    ```
+            function calculateTotalPrice(){
+
+              var date1 = new Date($("#checkin").val());
+              var date2 = new Date($("#checkout").val());
+
+              var Difference_In_Time = date2.getTime() - date1.getTime();
+              var nights = Difference_In_Time / (1000 * 3600 * 24);
+
+              var price = $("#pricePerNight").val();
+              var totalPrice = price*nights;
+              $("#totalPrice").val(totalPrice);
+              $("#totalPriceH").html(totalPrice + '원');
+              $("#nights").html(nights);
+
+            } 
+    ```
    
 ## JUnit 4 (Test)
    > H2 데이터 베이스를 사용하여 Layer 별 로직에 집중해 테스트를 수행하였습니다.
