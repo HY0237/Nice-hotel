@@ -366,15 +366,32 @@
        ```
    - Controller 테스트: @withMockUser을 사용하여 권한을 테스트 해보고 MockMvc를 이용해 GET, POST, DELETE api를 테스트 하였습니다.
        ```
-            @Test
-            @DisplayName("회원 정보 상세보기 테스트")
-            @WithMockUser(username = "admin", roles = "ADMIN")
-            void getClientDtl_test() throws Exception {
-                this.createMemberList();
-                mockMvc.perform(MockMvcRequestBuilders.get("/admin/client/{clientId}", "1"))
-                        .andDo(print())
-                        .andExpect(status().isOk());
-        }
+                @Test
+                @DisplayName("객실 예약 테스트")
+                @WithMockUser(username = "test@test.com", roles = "USER")
+                void reservationNew_test() throws Exception{
+                    Member member = this.saveMember();
+                    Long roomId = this.createRoom();
+
+                    ReservationDto reservationDto = new ReservationDto();
+                    reservationDto.setEmail(member.getEmail());
+                    reservationDto.setName(member.getName());
+                    reservationDto.setCheckIn(LocalDate.now());
+                    reservationDto.setCheckOut(LocalDate.now());
+                    reservationDto.setGuest(3);
+                    reservationDto.setPrice(10000);
+                    reservationDto.setRoomId(roomId);
+
+
+                    mockMvc.perform(MockMvcRequestBuilders.post("/reservation/new/")
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(objectMapper.writeValueAsString(reservationDto))
+                                    .with(csrf()))
+
+                            .andDo(print())
+                            .andExpect(status().isOk());
+                }
+        
        ```
        
    
