@@ -11,8 +11,10 @@ import java.util.UUID;
 @Log
 public class FileService {
 
-    public String uploadFile(String uploadPath, String originalFileName,
-                             byte[] fileData) throws Exception{
+    /**
+     * 파일 업로드
+     */
+    public String uploadFile(String uploadPath, String originalFileName, byte[] fileData) throws Exception{
         UUID uuid = UUID.randomUUID();
         String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
         String savedFileName = uuid.toString() + extension;
@@ -24,6 +26,9 @@ public class FileService {
 
     }
 
+    /**
+     * 파일 삭제
+     */
     public void deleteFile(String filePath) throws Exception{
         File deleteFile = new File(filePath);
 

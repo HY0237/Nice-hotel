@@ -45,12 +45,11 @@ public class ReservationController {
 
     /**
      * (관리자) 예약 내역 상세보기
-     * @param reservationId
-     * @param model
-     * @return
      */
     @GetMapping(value = "/admin/reservation/detail/{reservationId}")
     public String reservationDtl(@PathVariable("reservationId") Long reservationId, Model model){
+
+        //객실 예약 정보 조회
         try {
             ReservationDto reservationDto = reservationService.getAdminReservationDtl(reservationId);
             RoomFormDto roomFormDto = roomService.getRoomDtl(reservationDto.getRoomId());
@@ -66,16 +65,11 @@ public class ReservationController {
 
     /**
      * (관리자) 예약 삭제
-     * @param reservationId
-     * @return
      */
     @DeleteMapping(value= "/admin/reservation/delete/{reservationId}")
-    public @ResponseBody ResponseEntity reservationCancel(@PathVariable("reservationId") Long reservationId){
-
+    public @ResponseBody ResponseEntity<Long> reservationCancel(@PathVariable("reservationId") Long reservationId){
         reservationService.deleteReservation(reservationId);
-
-        return new ResponseEntity<Long>(reservationId, HttpStatus.OK);
-
+        return new ResponseEntity<>(reservationId, HttpStatus.OK);
     }
 
 

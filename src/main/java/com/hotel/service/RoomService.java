@@ -41,9 +41,11 @@ public class RoomService {
      */
     public Long saveRoom(RoomFormDto roomFormDto, List<MultipartFile> roomImgFileList) throws Exception{
 
+        //객실 저장
         Room room = roomFormDto.createRoom();
         roomRepository.save(room);
 
+        //객실 이미지 저장
         for(int i =0; i< roomImgFileList.size();i++){
             RoomImg roomImg = new RoomImg();
             roomImg.setRoom(room);
@@ -52,14 +54,14 @@ public class RoomService {
             }else{
                 roomImg.setRepimgYn("N");
             }
-            roomImgService.saveItemImg(roomImg, roomImgFileList.get(i));
+            roomImgService.saveRoomImg(roomImg, roomImgFileList.get(i));
         }
 
         return room.getId();
     }
 
     /**
-     * 객실 조회
+     * 객실 전체 조회
      * @param roomSearchDto
      * @param pageable
      * @return
@@ -78,6 +80,7 @@ public class RoomService {
     @Transactional(readOnly = true)
     public RoomFormDto getRoomDtl(Long roomId){
 
+        //객실 이미지 조회
         List<RoomImg> roomImgList = roomImgRepository.findByRoomIdOrderByIdAsc(roomId);
         List<RoomImgDto> roomImgDtoList = new ArrayList<>();
         for(RoomImg roomImg: roomImgList){
@@ -85,6 +88,7 @@ public class RoomService {
             roomImgDtoList.add(roomImgDto);
         }
 
+        //객실 정보 조회
         Room room = roomRepository.findById(roomId).orElseThrow(EntityNotFoundException::new);
         RoomFormDto roomFormDto = RoomFormDto.of(room);
         roomFormDto.setRoomImgDtoList(roomImgDtoList);
@@ -120,19 +124,21 @@ public class RoomService {
      * @param roomId
      */
     public void deleteRoom(Long roomId){
-        Room room = roomRepository.findById(roomId).orElseThrow(EntityNotFoundException::new);
 
+        //객실 이미지 삭제
         List<RoomImg> roomImgList = roomImgRepository.findByRoomIdOrderByIdAsc(roomId);
         for(RoomImg roomImg: roomImgList){
             roomImgRepository.delete(roomImg);
         }
 
+        //객실 예약 삭제
         List<Reservation> reservationList = reservationRepository.findByRoomIdOrderByIdAsc(roomId);
         for(Reservation reservation: reservationList){
             reservationRepository.delete(reservation);
         }
 
-
+        //객실 삭제
+        Room room = roomRepository.findById(roomId).orElseThrow(EntityNotFoundException::new);
         roomRepository.delete(room);
     }
 

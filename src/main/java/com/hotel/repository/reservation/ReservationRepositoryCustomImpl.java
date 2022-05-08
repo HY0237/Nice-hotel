@@ -1,15 +1,10 @@
 package com.hotel.repository.reservation;
 
 import com.hotel.constant.RoomType;
-import com.hotel.dto.reservation.QReservationDto;
-import com.hotel.dto.reservation.ReservationDto;
-import com.hotel.dto.reservation.ReservationMainDto;
 import com.hotel.dto.reservation.ReservationSearchDto;
-import com.hotel.entity.QMember;
 import com.hotel.entity.QReservation;
 import com.hotel.entity.QRoom;
 import com.hotel.entity.Reservation;
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
@@ -75,7 +70,7 @@ public class ReservationRepositoryCustomImpl implements  ReservationRepositoryCu
     @Override
     public Page<Reservation> getAdminReserPage(ReservationSearchDto reservationSearchDto, Pageable pageable) {
 
-        QueryResults<Reservation> results = queryFactory
+        List<Reservation> contents = queryFactory
                 .selectFrom(QReservation.reservation)
                 .where(regDtsAfter(reservationSearchDto.getSearchDateType()),
                         searchRoomByType(reservationSearchDto.getSearchRoomType()),
@@ -83,12 +78,11 @@ public class ReservationRepositoryCustomImpl implements  ReservationRepositoryCu
                 .orderBy(QReservation.reservation.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .fetchResults();
+                .fetch();
 
 
-        List<Reservation> content = results.getResults();
-        long total = results.getTotal();
+        long total = contents.size();
 
-        return new PageImpl<>(content, pageable, total);
+        return new PageImpl<>(contents, pageable, total);
     }
 }

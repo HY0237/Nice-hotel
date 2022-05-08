@@ -2,12 +2,10 @@ package com.hotel.dto.reservation;
 
 
 import com.hotel.entity.Reservation;
-import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;

@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -52,7 +53,7 @@ class ClientServiceTest {
 
     @Test
     @DisplayName("회원 정보 내역 테스트")
-    public void clientDetailTest(){
+    void clientDetailTest(){
         Member member = createMember();
         Member savedMember = memberService.saveMember(member);
         ClientDto clientDto = clientService.getClientDtl(savedMember.getId());
@@ -65,7 +66,7 @@ class ClientServiceTest {
 
     @Test
     @DisplayName("회원 정보 수정 테스트")
-    public void clientUpdateTest() throws Exception {
+    void clientUpdateTest() throws Exception {
         Member member = createMember();
         Member savedMember = memberService.saveMember(member);
         ClientDto clientDto = clientService.getClientDtl(savedMember.getId());
@@ -82,11 +83,11 @@ class ClientServiceTest {
 
     @Test
     @DisplayName("회원 삭제 테스트")
-    public void clientDeleteTest() throws Exception {
+    void clientDeleteTest() throws Exception {
         Member member = createMember();
         Member savedMember = memberService.saveMember(member);
         clientService.deleteClient(savedMember.getId());
-        assertEquals(memberRepository.count(), 0);
+        assertThat(memberRepository.findById(savedMember.getId()).isEmpty());
 
 
     }

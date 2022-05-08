@@ -123,17 +123,17 @@ class ReservationServiceTest {
 
     @Test
     @DisplayName("예약자 회원 테스트")
-    public void validateReservation_test() throws Exception {
+    void validateReservation_test() throws Exception {
         Long reservationId = this.createReservation();
         String email = "test@test.com";
-        assertEquals(reservationService.validateReservation(reservationId, email), true);
+        assertEquals(true, reservationService.validateReservation(reservationId, email));
 
     }
 
 
     @Test
     @DisplayName("객실 예약 테스트")
-    public void reservation_test() throws Exception {
+    void reservation_test() throws Exception {
         Long reservationId = this.createReservation();
         assertFalse(reservationRepository.findById(reservationId).isEmpty());
 
@@ -141,7 +141,7 @@ class ReservationServiceTest {
 
     @Test
     @DisplayName("예약 상세 보기 테스트")
-    public void getReservationHist_test() throws Exception {
+    void getReservationHist_test() throws Exception {
         this.createReservationList();
 
         Pageable pageable = PageRequest.of( 0, 4);
@@ -167,7 +167,7 @@ class ReservationServiceTest {
 
     @Test
     @DisplayName("예약 취소 테스트")
-    public void deleteReservation_test() throws Exception {
+    void deleteReservation_test() throws Exception {
 
         Long reservationId = this.createReservation();
         reservationService.deleteReservation(reservationId);
@@ -176,7 +176,7 @@ class ReservationServiceTest {
 
     @Test
     @DisplayName("관리자용 예약 상세보기 테스트")
-    public void getAdminReservationDtl_test() throws Exception {
+    void getAdminReservationDtl_test() throws Exception {
         Long reservationId = this.createReservation();
 
         ReservationDto reservationDetail = reservationService.getAdminReservationDtl(reservationId);

@@ -1,13 +1,10 @@
 package com.hotel.repository.room;
 
 import com.hotel.constant.RoomType;
-import com.hotel.dto.client.ClientDto;
-import com.hotel.dto.client.ClientSearchDto;
 import com.hotel.dto.reservation.ReservationMainDto;
 import com.hotel.dto.room.RoomFormDto;
 import com.hotel.dto.room.RoomSearchDto;
 import com.hotel.entity.Room;
-import com.hotel.repository.room.RoomRepository;
 import com.hotel.service.RoomService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -65,7 +62,7 @@ class RoomRepositoryTest {
 
     @Test
     @DisplayName("객실 저장 테스트")
-    public void createRoomTest(){
+    void createRoomTest(){
         Room room = new Room();
         room.setRoomNm("테스트 객실");
         room.setPricePerNight(40000);
@@ -80,7 +77,7 @@ class RoomRepositoryTest {
 
     @Test
     @DisplayName("객실명 조회 테스트")
-    public void findByRoomNmTest() throws Exception {
+    void findByRoomNmTest() throws Exception {
         this.createRoomList();
         List<Room> roomList = roomRepository.findByRoomNm("테스트 객실1");
         for(Room room: roomList){
@@ -90,7 +87,7 @@ class RoomRepositoryTest {
 
     @Test
     @DisplayName("관리자 페이지 전체 객실 조회 테스트")
-    public void findAllRooms_Test() throws Exception {
+    void findAllRooms_Test() throws Exception {
         this.createRoomList();
 
         /**
@@ -120,7 +117,7 @@ class RoomRepositoryTest {
 
     @Test
     @DisplayName("예약 가능한 객실 페이지 전체 조회 테스트")
-    public void findAllAvailRooms_Test() throws Exception {
+    void findAllAvailRooms_Test() throws Exception {
 
         this.createRoomList();
 

@@ -1,11 +1,8 @@
 package com.hotel.service;
 
-
 import com.hotel.dto.reservation.ReservationDetailDto;
 import com.hotel.dto.reservation.ReservationDto;
-import com.hotel.dto.reservation.ReservationMainDto;
 import com.hotel.dto.reservation.ReservationSearchDto;
-import com.hotel.dto.room.RoomSearchDto;
 import com.hotel.entity.Member;
 import com.hotel.entity.Reservation;
 import com.hotel.entity.Room;
@@ -39,9 +36,6 @@ public class ReservationService {
 
     /**
      * 예약자와 회원이 같은지 검증
-     * @param reservationId
-     * @param email
-     * @return
      */
     @Transactional(readOnly = true)
     public boolean validateReservation(Long reservationId, String email){
@@ -49,6 +43,7 @@ public class ReservationService {
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(EntityNotFoundException::new);
         Member savedMember = reservation.getMember();
 
+        //이메일로 검사
         if(!StringUtils.equals(savedMember.getEmail(), member.getEmail())){
             return false;
         }
@@ -59,22 +54,13 @@ public class ReservationService {
 
     /**
      * 객실 예약 하기
-     * @param reservationDto
-     * @return
      */
     public Long reservation(ReservationDto reservationDto){
         Room room = roomRepository.findById(reservationDto.getRoomId())
                 .orElseThrow(EntityNotFoundException::new);
         Member member = memberRepository.findByEmail(reservationDto.getEmail());
 
-        Reservation reservation = Reservation.createReservation(
-                reservationDto.getCheckIn(),
-                reservationDto.getCheckOut(),
-                reservationDto.getPrice(),
-                reservationDto.getGuest(),
-                member,
-                room
-        );
+        Reservation reservation = Reservation.createReservation( reservationDto, member, room);
         reservationRepository.save(reservation);
 
         return reservation.getId();
@@ -83,9 +69,6 @@ public class ReservationService {
 
     /**
      * 예약 상세 보기
-     * @param email
-     * @param pageable
-     * @return
      */
     @Transactional(readOnly = true)
     public Page<ReservationDetailDto> getReservationHist(String email, Pageable pageable){
@@ -100,7 +83,7 @@ public class ReservationService {
             reservationDetailDtos.add(reservationDetailDto);
         }
 
-        return new PageImpl<ReservationDetailDto>(reservationDetailDtos, pageable, total);
+        return new PageImpl<>(reservationDetailDtos, pageable, total);
     }
 
 
@@ -117,9 +100,6 @@ public class ReservationService {
 
     /**
      * (관리자) 예약 조회
-     * @param reservationSearchDto
-     * @param pageable
-     * @return
      */
     @Transactional(readOnly=true)
     public Page<Reservation> getAdminReserPage(ReservationSearchDto reservationSearchDto, Pageable pageable){
@@ -128,17 +108,13 @@ public class ReservationService {
 
     /**
      * (관리자) 예약 내역들 상세보기
-     * @param reservationId
-     * @return
      */
     @Transactional(readOnly = true)
     public ReservationDto getAdminReservationDtl(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        ReservationDto reservationDto = ReservationDto.createReservationDto(reservation);
-
-        return reservationDto;
+        return ReservationDto.createReservationDto(reservation);
     }
 
 

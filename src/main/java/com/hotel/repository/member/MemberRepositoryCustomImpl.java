@@ -1,19 +1,11 @@
 package com.hotel.repository.member;
 
 import com.hotel.constant.Role;
-import com.hotel.constant.RoomType;
-import com.hotel.dto.QReservationMainDto;
 import com.hotel.dto.client.ClientDto;
 import com.hotel.dto.client.ClientSearchDto;
 import com.hotel.dto.client.QClientDto;
-import com.hotel.dto.reservation.ReservationMainDto;
 import com.hotel.entity.QMember;
-import com.hotel.entity.QReservation;
-import com.hotel.entity.QRoom;
-import com.hotel.repository.room.RoomRepositoryCustom;
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -69,7 +61,7 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
     public Page<ClientDto> getClientPage(ClientSearchDto clientSearchDto, Pageable pageable) {
         QMember member = QMember.member;
 
-        QueryResults<ClientDto> results = queryFactory
+        List<ClientDto> content = queryFactory
                 .select(
                         new QClientDto(member)
                 )
@@ -81,10 +73,10 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
                 .orderBy(member.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .fetchResults();
+                .fetch();
 
-        List<ClientDto> content = results.getResults();
-        long total = results.getTotal();
+
+        long total = content.size();
 
         return new PageImpl<>(content, pageable, total);
 

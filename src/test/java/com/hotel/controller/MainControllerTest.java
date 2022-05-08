@@ -25,11 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -132,7 +129,7 @@ class MainControllerTest {
     @Test
     @DisplayName("예약 가능한 객실 조회 테스트")
     @WithMockUser(username = "test@test.com", roles = "USER")
-    public void getReservationAvaliable_test() throws Exception {
+    void getReservationAvaliable_test() throws Exception {
 
         this.createRoomList();
 
@@ -144,7 +141,7 @@ class MainControllerTest {
     @Test
     @DisplayName("객실 예약 페이지 테스트")
     @WithMockUser(username = "test@test.com", roles = "USER")
-    public void reservationForm_test() throws Exception{
+    void reservationForm_test() throws Exception{
         Long roomId = createRoom();
 
         mockMvc.perform(MockMvcRequestBuilders.get("/reservation/new/{roomId}", roomId))
@@ -155,7 +152,7 @@ class MainControllerTest {
     @Test
     @DisplayName("객실 예약 테스트")
     @WithMockUser(username = "test@test.com", roles = "USER")
-    public void reservationNew_test() throws Exception{
+    void reservationNew_test() throws Exception{
         Member member = this.saveMember();
         Long roomId = this.createRoom();
 
@@ -181,7 +178,7 @@ class MainControllerTest {
     @Test
     @DisplayName("예약 내역 상세보기 테스트")
     @WithMockUser(username = "test@test.com", roles = "USER")
-    public void reservationHist_test() throws Exception{
+    void reservationHist_test() throws Exception{
         this.createReservationList();
 
         mockMvc.perform(MockMvcRequestBuilders.get("/reservation/detail"))
@@ -192,7 +189,7 @@ class MainControllerTest {
     @Test
     @DisplayName("예약 삭제 테스트")
     @WithMockUser(username = "test@test.com", roles = "USER")
-    public void deleteReservation_test() throws Exception {
+    void deleteReservation_test() throws Exception {
 
         this.createReservationList();
 
@@ -200,7 +197,7 @@ class MainControllerTest {
                         .with(csrf()))
                 .andDo(print());
 
-        Assertions.assertThat(reservationRepository.findById(17L).isEmpty());
+        Assertions.assertThat(reservationRepository.findById(17L)).isEmpty();
     }
 
 

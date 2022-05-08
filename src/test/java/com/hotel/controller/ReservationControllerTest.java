@@ -25,7 +25,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -110,7 +109,7 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약 전체 조회 테스트")
     @WithMockUser(username = "admin", roles = "ADMIN")
-    public void getReservationAll_test() throws Exception {
+    void getReservationAll_test() throws Exception {
 
         this.createReservationList();
 
@@ -122,7 +121,7 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약 정보 상세보기 테스트")
     @WithMockUser(username = "admin", roles = "ADMIN")
-    public void getReservationDtl_test() throws Exception {
+    void getReservationDtl_test() throws Exception {
 
         this.createReservationList();
 
@@ -134,7 +133,7 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약 삭제 테스트")
     @WithMockUser(username = "admin", roles = "ADMIN")
-    public void deleteReservation_test() throws Exception {
+    void deleteReservation_test() throws Exception {
 
         this.createReservationList();
 
@@ -142,7 +141,7 @@ class ReservationControllerTest {
                         .with(csrf()))
                 .andDo(print());
 
-        Assertions.assertThat(reservationRepository.findById(17L).isEmpty());
+        Assertions.assertThat(reservationRepository.findById(17L)).isEmpty();
     }
 
 }

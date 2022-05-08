@@ -2,8 +2,6 @@ package com.hotel.dto.reservation;
 
 import com.hotel.constant.RoomType;
 import com.hotel.entity.Reservation;
-import com.hotel.entity.Room;
-import com.hotel.entity.RoomImg;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;

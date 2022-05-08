@@ -1,15 +1,14 @@
 package com.hotel.config;
 
-
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
 
 public class AuditorAwareImpl implements AuditorAware<String> {
 
+    //회원이름 가져오기
     @Override
     public Optional<String> getCurrentAuditor() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

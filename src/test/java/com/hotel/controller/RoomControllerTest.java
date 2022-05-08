@@ -1,14 +1,8 @@
 package com.hotel.controller;
 
-import com.hotel.constant.Role;
 import com.hotel.constant.RoomType;
 import com.hotel.dto.room.RoomFormDto;
-import com.hotel.entity.Member;
-import com.hotel.entity.Room;
-import com.hotel.entity.RoomImg;
-import com.hotel.repository.room.RoomImgRepository;
 import com.hotel.repository.room.RoomRepository;
-import com.hotel.service.RoomImgService;
 import com.hotel.service.RoomService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
@@ -78,7 +71,7 @@ class RoomControllerTest {
     @Test
     @DisplayName("객실 추가 페이지 테스트")
     @WithMockUser(username = "admin", roles = "ADMIN")
-    public void roomFormTest() throws Exception{
+    void roomFormTest() throws Exception{
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/room/new"))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -87,7 +80,7 @@ class RoomControllerTest {
     @Test
     @DisplayName("객실 추가 테스트")
     @WithMockUser(username = "admin", roles = "USER")
-    public void roomFormNotAdminTest() throws Exception{
+    void roomFormNotAdminTest() throws Exception{
 
 
         MockMultipartFile file = new MockMultipartFile("file", "orig", null, "bar".getBytes());
@@ -107,7 +100,7 @@ class RoomControllerTest {
     @Test
     @DisplayName("객실 전체 조회 테스트")
     @WithMockUser(username = "admin", roles = "ADMIN")
-    public void getRoomAll_test() throws Exception {
+    void getRoomAll_test() throws Exception {
 
         this.createRoomList();
         /**
@@ -123,12 +116,11 @@ class RoomControllerTest {
     @Test
     @DisplayName("객실 이름으로 조회 테스트")
     @WithMockUser(username = "admin", roles = "ADMIN")
-    public void getRoomAllByName_test() throws Exception {
+    void getRoomAllByName_test() throws Exception {
 
         this.createRoomList();
-        /**
-         * 객실 이름 1을 입력 값으로 넣었을때 test1, test10 출력
-         */
+
+        //객실 이름 1을 입력 값으로 넣었을때 test1, test10 출력
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/rooms/{page}", "0")
                         .param("searchQuery", "1"))
                 .andDo(print())
@@ -138,13 +130,11 @@ class RoomControllerTest {
     @Test
     @DisplayName("회원 이메일로 조회 테스트")
     @WithMockUser(username = "admin", roles = "ADMIN")
-    public void getClientAllByEmail_test() throws Exception {
+    void getClientAllByEmail_test() throws Exception {
 
         this.createRoomList();
 
-        /**
-         * 객실 타입 Single을 입력 값으로 넣었을때 모두 출력
-         */
+        // 객실 타입 Single을 입력 값으로 넣었을때 모두 출력
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/rooms/{page}", "0")
                         .param("searchRoomType", "SINGLE"))
                 .andDo(print())
@@ -154,7 +144,7 @@ class RoomControllerTest {
     @Test
     @DisplayName("객실 정보 상세보기 테스트")
     @WithMockUser(username = "admin", roles = "ADMIN")
-    public void getClientDtl_test() throws Exception {
+    void getClientDtl_test() throws Exception {
 
         this.createRoomList();
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/room/{roomId}", "1"))
@@ -165,10 +155,10 @@ class RoomControllerTest {
     @Test
     @DisplayName("객실 수정 테스트")
     @WithMockUser(username = "admin", roles = "ADMIN")
-    public void postClientUpdate_test() throws Exception {
+    void postClientUpdate_test() throws Exception {
 
+        // 객실 이미지 수정
         MockMultipartFile file = new MockMultipartFile("F:/niceHotel/room", "image.jpg", "image/jpg", new byte[]{1, 2, 3, 4});
-
 
         this.createRoomList();
 
@@ -189,7 +179,7 @@ class RoomControllerTest {
     @Test
     @DisplayName("객실 삭제 테스트")
     @WithMockUser(username = "admin", roles = "ADMIN")
-    public void deleteClient_test() throws Exception {
+    void deleteClient_test() throws Exception {
 
         this.createRoomList();
 
@@ -197,7 +187,7 @@ class RoomControllerTest {
                         .with(csrf()))
                 .andDo(print());
 
-        Assertions.assertThat(roomRepository.findById(1L).isEmpty());
+        Assertions.assertThat(roomRepository.findById(1L)).isEmpty();
     }
 
 

@@ -2,8 +2,6 @@ package com.hotel.repository.member;
 
 import com.hotel.constant.Role;
 import com.hotel.entity.Member;
-import com.hotel.entity.Room;
-import com.hotel.repository.room.RoomRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 

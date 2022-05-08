@@ -1,7 +1,5 @@
 package com.hotel.config;
 
-
-import com.hotel.entity.Member;
 import com.hotel.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

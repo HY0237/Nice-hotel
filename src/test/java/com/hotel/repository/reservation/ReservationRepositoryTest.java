@@ -102,7 +102,7 @@ class ReservationRepositoryTest {
 
     @Test
     @DisplayName("회원 메일로 예약 조회 테스트")
-    public void getReservationByEmail_test() throws Exception {
+    void getReservationByEmail_test() throws Exception {
         this.createReservationList();
 
         Pageable pageable = PageRequest.of( 0, 4);
@@ -121,17 +121,17 @@ class ReservationRepositoryTest {
 
     @Test
     @DisplayName("회원 메일로 총 예약수 테스트")
-    public void countReservationByEmail_test() throws Exception {
+    void countReservationByEmail_test() throws Exception {
         this.createReservationList();
 
-        Long total_Reserve = reservationRepository.countReservation("test@test.com");
+        Long total = reservationRepository.countReservation("test@test.com");
 
-        assertEquals(total_Reserve, 10L);
+        assertEquals(10L, total);
     }
 
     @Test
     @DisplayName("객실 아이디로 예약 조회 테스트")
-    public void findReservationByRoomId_test() throws Exception {
+    void findReservationByRoomId_test() throws Exception {
         Long roomId = null;
         try {
             roomId = createRoom();
@@ -166,7 +166,7 @@ class ReservationRepositoryTest {
 
     @Test
     @DisplayName("회원 아이디로 예약 조회 테스트")
-    public void findReservationByMemberId_test() throws Exception {
+    void findReservationByMemberId_test() throws Exception {
         Long roomId = null;
         try {
             roomId = createRoom();
@@ -191,7 +191,7 @@ class ReservationRepositoryTest {
 
     @Test
     @DisplayName("관리자용 예약 조회 테스트")
-    public void getAdminReservations_test() throws Exception {
+    void getAdminReservations_test() throws Exception {
         this.createReservationList();
 
         Pageable pageable = PageRequest.of( 0, 4);

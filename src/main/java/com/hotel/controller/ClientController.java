@@ -2,11 +2,7 @@ package com.hotel.controller;
 
 import com.hotel.dto.client.ClientDto;
 import com.hotel.dto.client.ClientSearchDto;
-import com.hotel.dto.room.RoomFormDto;
-import com.hotel.dto.room.RoomSearchDto;
-import com.hotel.entity.Room;
 import com.hotel.service.ClientService;
-import com.hotel.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,23 +33,24 @@ public class ClientController {
      */
     @GetMapping(value = {"/admin/clients", "/admin/clients/{page}"})
     public String clientAll(ClientSearchDto clientSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
+
         Pageable pageable = PageRequest.of(page.isPresent()? page.get() : 0, 4);
         Page<ClientDto> clients = clientService.getClientPage(clientSearchDto, pageable);
+
         model.addAttribute("clients", clients);
         model.addAttribute("clientSearchDto", clientSearchDto);
         model.addAttribute("maxPage", 5);
+
         return "client/clients";
     }
 
     /**
      * (관리자) 회원 정보 상세보기
-     * @param clientId
-     * @param model
-     * @return
      */
     @GetMapping(value = "/admin/client/{clientId}")
     public String clientDtl(@PathVariable("clientId") Long clientId, Model model){
 
+        //회원 정보 상세보기
         try{
             ClientDto clientDto = clientService.getClientDtl(clientId);
             model.addAttribute("clientDto", clientDto);
@@ -67,10 +64,6 @@ public class ClientController {
 
     /**
      * (관리자) 회원 정보 수정
-     * @param clientDto
-     * @param bindingResult
-     * @param model
-     * @return
      */
     @PostMapping(value = "/admin/client/{clientId}")
     public String clientUpdate(@Valid ClientDto clientDto, BindingResult bindingResult, Model model){
@@ -79,6 +72,7 @@ public class ClientController {
             return "client/clientForm";
         }
 
+        //회원 정보 수정
         try{
             clientService.updateClient(clientDto);
         }catch (Exception e) {
@@ -89,17 +83,13 @@ public class ClientController {
         return "redirect:/admin/clients";
     }
 
-    /** (관리자) 회원 삭제
-     *
-     * @param clientId
-     * @return
+    /**
+     * (관리자) 회원 삭제
      */
     @DeleteMapping(value= "/admin/client/delete/{clientId}")
-    public @ResponseBody ResponseEntity clientDelete(@PathVariable("clientId") Long clientId){
-
+    public @ResponseBody ResponseEntity<Long> clientDelete(@PathVariable("clientId") Long clientId){
         clientService.deleteClient(clientId);
-
-        return new ResponseEntity<Long>(clientId, HttpStatus.OK);
+        return new ResponseEntity<>(clientId, HttpStatus.OK);
 
     }
 

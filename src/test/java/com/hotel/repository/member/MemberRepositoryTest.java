@@ -41,7 +41,7 @@ class MemberRepositoryTest {
 
     @Test
     @DisplayName("회원 페이지 조회 테스트")
-    public void findAllClients_Test(){
+    void findAllClients_Test(){
         this.createMemberList();
 
         /**

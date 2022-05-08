@@ -24,7 +24,13 @@ public class RoomImgService {
 
     private final FileService fileService;
 
-    public void saveItemImg(RoomImg roomImg, MultipartFile roomImgFile) throws Exception{
+    /**
+     * 객실 이미지 저장
+     * @param roomImg
+     * @param roomImgFile
+     * @throws Exception
+     */
+    public void saveRoomImg(RoomImg roomImg, MultipartFile roomImgFile) throws Exception{
         String oriImgName = roomImgFile.getOriginalFilename();
         String imgName = "";
         String imgUrl = "";
@@ -39,6 +45,12 @@ public class RoomImgService {
         roomImgRepository.save(roomImg);
     }
 
+    /**
+     * 객실 이미지 수정
+     * @param roomImgId
+     * @param roomImgFile
+     * @throws Exception
+     */
     public void updateRoomImg(Long roomImgId, MultipartFile roomImgFile) throws Exception{
         if(!roomImgFile.isEmpty()){
             RoomImg savedRoomImg = roomImgRepository.findById(roomImgId).orElseThrow(EntityNotFoundException::new);

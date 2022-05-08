@@ -23,24 +23,44 @@ public class MemberController {
     private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
 
-
+    /**
+     * 로그인
+     * @return
+     */
     @GetMapping(value = "/login")
     public String login(){
         return "user/login";
     }
 
+    /**
+     * 로그인 에러
+     * @param model
+     * @return
+     */
     @GetMapping(value = "/login/error")
     public String loginError(Model model){
         model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호 확인해주세요");
         return "user/login";
     }
 
+    /**
+     * 회원 가입 페이지
+     * @param model
+     * @return
+     */
     @GetMapping(value = "/register")
     public String register(Model model){
         model.addAttribute("memberFormDto", new MemberFormDto());
         return "user/register";
     }
 
+    /**
+     * 회원 가입
+     * @param memberFormDto
+     * @param bindingResult
+     * @param model
+     * @return
+     */
     @PostMapping(value = "/register")
     public String register(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Model model){
 

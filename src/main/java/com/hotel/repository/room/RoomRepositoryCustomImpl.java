@@ -8,7 +8,6 @@ import com.hotel.entity.QReservation;
 import com.hotel.entity.QRoom;
 import com.hotel.entity.QRoomImg;
 import com.hotel.entity.Room;
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -84,11 +83,7 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
      */
     private BooleanExpression searchMaxGuest(Integer guest){
 
-        if(guest == null){
-            guest = 1;
-        }
-
-        return QRoom.room.maxPeople.goe(guest);
+        return guest == null? QRoom.room.maxPeople.goe(1): QRoom.room.maxPeople.goe(guest);
     }
 
 
@@ -101,13 +96,13 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
     private BooleanExpression searchDate(LocalDate checkIn, LocalDate checkOut){
 
 
-        LocalDate checkIn_default= LocalDate.now();
-        LocalDate checkOut_default = LocalDate.now();
-        checkOut_default=checkOut_default.plusDays(1);
+        LocalDate checkInDefault = LocalDate.now();
+        LocalDate checkOutDefault = LocalDate.now().plusDays(1);
+
 
         if(checkIn == null && checkOut == null){
-            checkIn = checkIn_default;
-            checkOut = checkOut_default;
+            checkIn = checkInDefault;
+            checkOut = checkOutDefault;
         }
 
         //case 1 : QcheckIn >= checkIn and QcheckOut < checkOut
@@ -139,7 +134,7 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
     @Override
     public Page<Room> getAdminRoomPage(RoomSearchDto roomSearchDto, Pageable pageable) {
 
-        QueryResults<Room> results = queryFactory
+        List<Room> contents = queryFactory
                 .selectFrom(QRoom.room)
                 .where(regDtsAfter(roomSearchDto.getSearchDateType()),
                         searchRoomByType(roomSearchDto.getSearchRoomType()),
@@ -147,12 +142,12 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
                 .orderBy(QRoom.room.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .fetchResults();
+                .fetch();
 
-        List<Room> content = results.getResults();
-        long total = results.getTotal();
 
-        return new PageImpl<>(content, pageable, total);
+        long total = contents.size();
+
+        return new PageImpl<>(contents, pageable, total);
     }
 
 
@@ -169,7 +164,7 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
         QRoomImg roomImg = QRoomImg.roomImg;
         QReservation reservation = QReservation.reservation;
 
-        QueryResults<ReservationMainDto> results = queryFactory
+        List<ReservationMainDto> contents = queryFactory
                 .select(
                         new QReservationMainDto(
                                 room.id,
@@ -192,12 +187,12 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
                 .orderBy(room.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .fetchResults();
+                .fetch();
 
-        List<ReservationMainDto> content = results.getResults();
-        long total = results.getTotal();
 
-        return new PageImpl<>(content, pageable, total);
+        long total = contents.size();
+
+        return new PageImpl<>(contents, pageable, total);
 
     }
 }

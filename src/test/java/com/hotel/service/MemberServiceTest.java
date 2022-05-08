@@ -35,7 +35,7 @@ class MemberServiceTest {
 
     @Test
     @DisplayName("회원가입 테스트")
-    public void saveMemberTest(){
+    void saveMemberTest(){
         Member member = createMember();
         Member savedMember = memberService.saveMember(member);
 
@@ -47,7 +47,7 @@ class MemberServiceTest {
 
     @Test
     @DisplayName("중복 회원 가입 테스트")
-    public void saveDuplicateMemberTest(){
+    void saveDuplicateMemberTest(){
         Member member1 = createMember();
         Member member2 = createMember();
         memberService.saveMember(member1);

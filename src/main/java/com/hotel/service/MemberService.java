@@ -18,11 +18,17 @@ public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
+    /**
+     * 멤버 저장
+     */
     public Member saveMember(Member member){
         validateDuplicateMember(member);
         return memberRepository.save(member);
     }
 
+    /**
+     * 멤머 중복 확인
+     */
     private void validateDuplicateMember(Member member){
         Member findmember = memberRepository.findByEmail(member.getEmail());
         if(findmember != null){
@@ -30,6 +36,9 @@ public class MemberService implements UserDetailsService {
         }
     }
 
+    /**
+     * 멤버 정보 가져오기
+     */
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Member member = memberRepository.findByEmail(email);

@@ -68,7 +68,7 @@ class RoomServiceTest {
     @Test
     @DisplayName("객실 등록 테스트")
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    public void saveRoom() throws Exception {
+    void saveRoom() throws Exception {
         RoomFormDto roomFormDto = new RoomFormDto();
         roomFormDto.setRoomNm("테스트 객실");
         roomFormDto.setRoomType(RoomType.SINGLE);
@@ -90,21 +90,21 @@ class RoomServiceTest {
     @Test
     @DisplayName("객실 정보 상세보기 테스트")
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    public void detailRoom() throws Exception {
+    void detailRoom() throws Exception {
         this.createRoomList();
         RoomFormDto roomFormDto = roomService.getRoomDtl(1L);
-        Assertions.assertEquals(roomFormDto.getRoomNm(), "테스트 객실1");
-        Assertions.assertEquals(roomFormDto.getRoomType(), RoomType.SINGLE);
-        Assertions.assertEquals(roomFormDto.getRoomDetail(), "테스트 객실 입니다");
-        Assertions.assertEquals(roomFormDto.getPricePerNight(), 1000);
-        Assertions.assertEquals(roomFormDto.getMaxPeople(), 1);
+        Assertions.assertEquals("테스트 객실1", roomFormDto.getRoomNm());
+        Assertions.assertEquals(RoomType.SINGLE, roomFormDto.getRoomType());
+        Assertions.assertEquals("테스트 객실 입니다", roomFormDto.getRoomDetail());
+        Assertions.assertEquals(1000, roomFormDto.getPricePerNight());
+        Assertions.assertEquals(1, roomFormDto.getMaxPeople());
         Assertions.assertFalse(roomFormDto.getRoomImgDtoList().isEmpty());
     }
 
     @Test
     @DisplayName("객실 수정 테스트")
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    public void updateRoom() throws Exception {
+    void updateRoom() throws Exception {
         this.createRoomList();
         RoomFormDto roomFormDto = new RoomFormDto();
         roomFormDto.setId(1L);
@@ -129,11 +129,11 @@ class RoomServiceTest {
     @Test
     @DisplayName("객실 삭제 테스트")
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    public void deleteRoom() throws Exception {
+    void deleteRoom() throws Exception {
         this.createRoomList();
         roomService.deleteRoom(1L);
 
-        org.assertj.core.api.Assertions.assertThat(roomRepository.findById(1L).isEmpty());
+        org.assertj.core.api.Assertions.assertThat(roomRepository.findById(1L)).isEmpty();
     }
 
 

@@ -56,7 +56,7 @@ class ClientControllerTest {
     @Test
     @DisplayName("회원 전체 조회 테스트")
     @WithMockUser(username = "admin", roles = "ADMIN")
-    public void getClientAll_test() throws Exception {
+    void getClientAll_test() throws Exception {
 
         this.createMemberList();
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/clients/{page}", "0"))
@@ -72,7 +72,7 @@ class ClientControllerTest {
     @Test
     @DisplayName("회원 이름으로 조회 테스트")
     @WithMockUser(username = "admin", roles = "ADMIN")
-    public void getClientAllByName_test() throws Exception {
+    void getClientAllByName_test() throws Exception {
 
         this.createMemberList();
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/clients/{page}", "0")
@@ -90,7 +90,7 @@ class ClientControllerTest {
     @Test
     @DisplayName("회원 이메일로 조회 테스트")
     @WithMockUser(username = "admin", roles = "ADMIN")
-    public void getClientAllByEmail_test() throws Exception {
+    void getClientAllByEmail_test() throws Exception {
 
         this.createMemberList();
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/clients/{page}", "0")
@@ -103,7 +103,7 @@ class ClientControllerTest {
     @Test
     @DisplayName("회원 정보 상세보기 테스트")
     @WithMockUser(username = "admin", roles = "ADMIN")
-    public void getClientDtl_test() throws Exception {
+    void getClientDtl_test() throws Exception {
 
         this.createMemberList();
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/client/{clientId}", "1"))
@@ -114,7 +114,7 @@ class ClientControllerTest {
     @Test
     @DisplayName("회원 수정 테스트")
     @WithMockUser(username = "admin", roles = "ADMIN")
-    public void postClientUpdate_test() throws Exception {
+    void postClientUpdate_test() throws Exception {
 
         this.createMemberList();
 
@@ -132,7 +132,7 @@ class ClientControllerTest {
     @Test
     @DisplayName("회원 삭제 테스트")
     @WithMockUser(username = "admin", roles = "ADMIN")
-    public void deleteClient_test() throws Exception {
+    void deleteClient_test() throws Exception {
 
         this.createMemberList();
 
@@ -141,7 +141,7 @@ class ClientControllerTest {
                         .with(csrf()))
                 .andDo(print());
 
-        Assertions.assertThat(memberRepository.findById(10L).isEmpty());
+        Assertions.assertThat(memberRepository.findById(10L)).isEmpty();
     }
 
 

@@ -1,5 +1,6 @@
 package com.hotel.entity;
 
+import com.hotel.dto.reservation.ReservationDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -39,16 +40,14 @@ public class Reservation extends BaseEntity{
     @JoinColumn(name = "room_id")
     private Room room;
 
-    public static Reservation createReservation(LocalDate checkIn, LocalDate checkOut
-    , int price, int guest, Member member, Room room){
+    public static Reservation createReservation(ReservationDto reservationDto, Member member, Room room){
         Reservation reservation = new Reservation();
-        reservation.setCheckIn(checkIn);
-        reservation.setCheckOut(checkOut);
-        reservation.setPrice(price);
-        reservation.setGuest(guest);
+        reservation.setCheckIn(reservationDto.getCheckIn());
+        reservation.setCheckOut(reservationDto.getCheckOut());
+        reservation.setPrice(reservationDto.getPrice());
+        reservation.setGuest(reservationDto.getGuest());
         reservation.setMember(member);
         reservation.setRoom(room);
-
         return reservation;
     }
 
