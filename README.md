@@ -34,10 +34,14 @@
   - html
   - css
   - jquery
- ## 🛠 구조 및 설계
- ### DB 설계
+
+ 
+ ## 🛠 DB 설계
+ 
  ![nice_hotel_ERD](https://user-images.githubusercontent.com/68864993/165909386-eb711ca0-0117-46fa-ba9c-50a610f8a9e4.JPG)
- ### API 설계
+ 
+ ## 🛠 API 설계
+ 
  <img src="https://user-images.githubusercontent.com/68864993/165914999-318498d4-b9d8-4dd7-b2e0-5ea20b79356d.JPG"  width="800" height="300"/>
  <img src="https://user-images.githubusercontent.com/68864993/165915003-aa8b85bb-a72d-48bb-93ab-dcc24914a6a7.JPG"  width="800" height="250"/>
  <img src="https://user-images.githubusercontent.com/68864993/165915009-10a16953-d590-4e75-97cc-7dd6a098b13b.JPG"  width="800" height="400"/>
