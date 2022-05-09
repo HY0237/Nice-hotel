@@ -1,7 +1,7 @@
 # 🏤 **Nice Hotel** 
 
 ## ❔ 프로젝트 계기
-이 프로젝트를 시작한 계기는 웹 프로그래밍의 기본 기술인 서버 프레임워크, 웹 언어 그리고 ORM등의 개념을 공부하고 
+이 프로젝트를 시작한 계기는 웹 프로그래밍의 기본 기술인 서버 프레임워크, 웹 언어 그리고 데이터베이스등의 개념을 공부하고 
 각 기술들이 어떻게 유기적으로 연결이 되는지 이해하고 싶어 만들어 보게 되었습니다. 그리고 여러 숙박 예약 사이트에서 호텔과 객실을 검색하는 기능을 보고 이에 관한 데이터 쿼리도 한번 만들어보고 싶은 마음도 있었습니다. 
 
 ## 🙋‍♀️ 프로젝트 소개
@@ -21,13 +21,13 @@
 - ### Database
   MYSQL 8.0.27
 - ### Dependencies
-  - Spring Web 2.6.4
-  - Spring data JPA 2.6.4
-  - Spring Security 2.6.4
+  - Spring Web 
+  - Spring data JPA 
+  - Spring Security 
   - Lombok 1.18.22
   - QueryDSL 5.0.0
-  - Thymelaf 2.6.4
-  - Devtools 2.6.4
+  - Thymelaf 
+  - Devtools 
   - Modelmapper 2.3.9
   - JUnit 4.13.2
  - ### Front-end
@@ -75,17 +75,17 @@
 ![niceHotel_mainPage](https://user-images.githubusercontent.com/68864993/165918471-efcac35a-9714-4f75-8a57-93e640287008.JPG)
 
   ### 7. 관리자용 회원 관리
-  > 등록 기간, 회원 이름, 이메일로 전체 회원을 조회 할 수 있습니다. 각 회원님의 정보를 수정하고 삭제할 수 있습니다.
+  > 등록 기간, 회원 이름, 이메일 옵션을 넣어 회원을 조회 할 수 있습니다. 각 회원님의 정보를 수정하고 삭제할 수 있습니다.
   
 ![회원 조회](https://user-images.githubusercontent.com/68864993/165922182-1edb50a2-abb1-4a11-953c-a65a53fa023d.JPG)
 
   ### 8. 관리자용 객실 관리 
-  > 등록 기간, 객실 타입, 객실 이름으로 전체 객실을 조회 할 수 있습니다. 객실을 추가, 수정, 삭제할 수 있습니다.
+  > 등록 기간, 객실 타입, 객실 이름 옵션을 넣어 객실을 조회 할 수 있습니다. 객실을 추가, 수정, 삭제할 수 있습니다.
   
 ![객실 조회](https://user-images.githubusercontent.com/68864993/165922555-72d1d409-130e-47b8-8de3-7a2b894061ba.JPG)
 
   ### 6. 관리자용 예약 관리 
-  > 등록 기간, 객실 이름, 회원 이름, 회원 메일로 전체 예약을 조회 할 수 있습니다. 예약을 추가 또는 삭제할 수 있습니다.
+  > 등록 기간, 객실 타입, 회원 이름, 회원 메일 옵션을 넣어 예약을 조회 할 수 있습니다. 예약을 추가 또는 삭제할 수 있습니다.
   
 ![예약 조회](https://user-images.githubusercontent.com/68864993/165924536-747ea897-7cf7-4ff3-bdca-825018dc0b94.JPG)
 
@@ -108,16 +108,25 @@
   - Service 클래스에 @Transactional 어노테이션을 선언해 로직을 처리하다가 에러가 발생하면 로직을 수행하기 이전 상태로 콜백시켜줍니다.
   - Entity 클래스를 Request/Response 클래스로 사용하지 않도록! 그 이유는 Entity 클래스는 데이터 베이스와 맞닿은 클래스이기 때문입니다.
   - update 기능에서 데이터베이스에 Update 쿼리를 날릴 필요가 없습니다. 엔티티를 영구 저장하는 JPA의 영속성 컨텍스트 환경으로 인해 데이터의 값이 변경하면 트랜잭션이 끝나는 시점에 해당 테이블에 변경분을 반영합니다.
+    ```
+        public Long updateClient(ClientDto clientDto){
+          Member member = memberRepository.findById(clientDto.getId()).orElseThrow(EntityExistsException::new);
+          member.updateClient(clientDto);
+          return member.getId();
+         }
+    ```
+- @DateTimeFormate이라는 스프링에서 지원하는 어노테이션을 사용해 날짜 관련 타입 데이터를 쉽게 직렬화하고 커스터마이징을해서 데이터를 입력 받아 올 수 있었습니다.
   ```
-      public Long updateClient(ClientDto clientDto){
-        Member member = memberRepository.findById(clientDto.getId()).orElseThrow(EntityExistsException::new);
-        member.updateClient(clientDto);
-        return member.getId();
-    }
-  ```
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate checkIn;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate checkOut;
+    
+   ```
 
 
-  ## Spring Security
+## Spring Security
   > security 인증, 인가 설정을 추가해 회원가입 로그인을 구현해 보고 관리자 페이지에 접근 권한을 부여하는 서비스를 구현해보았습니다. 
   - 인증이 필요없는 경우 : 예약 가능한 객실 조회
   - 인증이 필요한 경우 : 객실 예약, 예약 상세보기
@@ -138,7 +147,6 @@
             web.ignoring().antMatchers("/assets/**","/forms/**","/img/**");
         }
     ```
-
 
 - spring security를 사용할 경우 기본적으로 CSRF를 방어하기 위해 모든 POST 방식의 데이터 전송에 CSRF 토큰 값을 보내 전송했습니다.
     ```
@@ -188,15 +196,6 @@
    - BaseEntity: BaseTimeEntity를 상속 받으며 등록자 @CreatBy 수정자 @LastModifedBy를 엔티티가 생성 변경 될때 자동으로 저장합니다.
    - Room, Reservation, Member 엔티티는 BaseEntity 클래스를 상속 받았습니다.
 
- ### 배운 점 📚
-- @DateTimeFormate이라는 스프링에서 지원하는 어노테이션을 사용해 날짜 관련 타입 데이터를 쉽게 직렬화하고 커스터마이징을해서 데이터를 입력 받아 올 수 있었습니다.
-  ```
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate checkIn;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate checkOut;
-  ```
 
   
  ## QueryDSL
@@ -439,7 +438,16 @@
             @Transactional
             @TestPropertySource(locations = {"classpath:application-test.properties"})
             class RoomServiceTest {
-            ...
+                  ...
+                  
+                  @Test
+                  @DisplayName("객실 삭제 테스트")
+                  @WithMockUser(username = "admin", roles = {"ADMIN"})
+                  void deleteRoom() throws Exception {
+                      this.createRoomList();
+                      roomService.deleteRoom(1L);
+                      Assertions.assertThat(roomRepository.findById(1L)).isEmpty();
+                  }
             }
        ```
    - Controller 테스트: @withMockUser을 사용하여 권한을 테스트 해보고 MockMvc를 이용해 GET, POST, DELETE api를 테스트 하였습니다.
