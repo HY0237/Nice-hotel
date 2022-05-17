@@ -119,7 +119,7 @@
           return member.getId();
          }
     ```
-- @DateTimeFormate이라는 스프링에서 지원하는 어노테이션을 사용해 날짜 관련 타입 데이터를 쉽게 직렬화하고 커스터마이징을해서 데이터를 입력 받아 올 수 있었습니다.
+- @DateTimeFormat이라는 스프링에서 지원하는 어노테이션을 사용해 날짜 관련 타입 데이터를 쉽게 직렬화하고 커스터마이징을해서 데이터를 입력 받아 올 수 있었습니다.
   ```
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate checkIn;
@@ -181,7 +181,7 @@
  ## JPA 
   > ORM을 위해 자바에서 제공하는 API, 반복적인 CRUD 작업을 대체해 DB에서 간단한 데이터를 조회 합니다.
   
--  SpringDataJpa에서 제공하지 않는 메소드는 @Query를 작성하여 사용해 보았습니다.
+-  SpringData Jpa에서 제공하지 않는 메소드는 @Query를 작성하여 사용해 보았습니다.
       ```
             @Query("select r from Reservation r "+
                     "where r.member.email = :email "+
@@ -454,7 +454,7 @@
                   }
             }
        ```
-   - Controller 테스트: @withMockUser을 사용하여 권한을 테스트 해보고 MockMvc를 이용해 GET, POST, DELETE api를 테스트 하였습니다.
+   - Controller 테스트: @ithMockUser을 사용하여 권한을 테스트 해보고 MockMvc를 이용해 GET, POST, DELETE api를 테스트 하였습니다.
        ```
                 @Test
                 @DisplayName("객실 예약 테스트")
